@@ -96,6 +96,16 @@ at the centre; dragging moves it by hand. With reduced motion the rail stays sti
 `?settled` on the URL renders the whole page at its final state — used by the QA tools for deterministic
 composition screenshots.
 
+## Contact form
+
+"Start the Conversation" posts to `public/api/contact.php`, a dependency-free PHP endpoint that e-mails
+the enquiry to `studio@aivinci.ai` (honeypot, minimum fill time, size caps, header-injection stripping,
+per-IP rate limit). It runs as-is on Hostinger / any PHP host; the mail is sent from the studio's own
+mailbox with the visitor as Reply-To, so replies go straight back to them. If the endpoint is missing
+(a static-only host, the Vite dev server) the page falls back to opening the visitor's mail app with
+the message composed. To change the destination address edit `TO_EMAIL` in `contact.php` and
+`brand.email` in `src/data/content.ts`.
+
 ## Deploy
 
 The site is a static single-page build: `npm run build` → `dist/` (no server, no client-side routes).

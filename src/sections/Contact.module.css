@@ -358,6 +358,25 @@
   text-transform: none;
 }
 
+.sent[data-status='sent'] {
+  color: var(--white);
+}
+
+.sent a {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* the honeypot lives off-screen; assistive tech and people never meet it */
+.trap {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .together {
   position: absolute;
   left: 2.9%;

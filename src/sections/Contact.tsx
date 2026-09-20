@@ -99,7 +99,11 @@ export function Contact() {
   const screen = useRef<HTMLDivElement>(null)
   const scene = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
-  const [sent, setSent] = useState<null | 'ok'>(null)
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'fallback' | 'failed'>('idle')
+  const openedAt = useRef(0)
+  useEffect(() => {
+    openedAt.current = Date.now()
+  }, [])
 
   useSectionReveal(
     root,
@@ -177,16 +181,36 @@ export function Contact() {
     }
   }, [reduced])
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  /** the enquiry goes to the studio's mailbox through api/contact.php (PHP on the host); should the
+   *  endpoint be unavailable, the visitor's mail app opens with the message composed instead */
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const data = new FormData(e.currentTarget)
-    // mailto is the only honest transport without a backend: it composes the message in the visitor's mail client
+    const form = e.currentTarget
+    const data = new FormData(form)
+    data.set('ts', String(openedAt.current))
     const lines = ['name', 'company', 'email', 'phone', 'budget'].map((k) => `${k}: ${String(data.get(k) ?? '')}`)
     lines.push(`needs: ${data.getAll('needs').map(String).join(', ')}`)
     lines.push(`message: ${String(data.get('message') ?? '')}`)
-    const href = `mailto:${brand.email}?subject=${encodeURIComponent('Start a project — ' + String(data.get('name') ?? ''))}&body=${encodeURIComponent(lines.join('\n'))}`
-    window.location.href = href
-    setSent('ok')
+    const mailto = `mailto:${brand.email}?subject=${encodeURIComponent('Start a project — ' + String(data.get('name') ?? ''))}&body=${encodeURIComponent(lines.join('\n'))}`
+    setStatus('sending')
+    try {
+      const res = await fetch(asset('/api/contact.php'), { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+      const json = (await res.json().catch(() => null)) as { ok?: boolean } | null
+      if (res.ok && json?.ok) {
+        setStatus('sent')
+        form.reset()
+        openedAt.current = Date.now()
+        return
+      }
+      if (res.status === 429 || res.status === 422) {
+        setStatus('failed')
+        return
+      }
+    } catch {
+      /* no endpoint (static preview) — fall through to the mail app */
+    }
+    window.location.href = mailto
+    setStatus('fallback')
   }
 
   return (
@@ -250,6 +274,11 @@ export function Contact() {
               {c.description}
             </p>
             <form className={styles.form} onSubmit={onSubmit} data-ct="copy" aria-label="Start the conversation">
+              {/* honeypot: hidden from people, filled only by bots */}
+              <div className={styles.trap} aria-hidden="true">
+                <label htmlFor="contact-website">Website</label>
+                <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
               <div className={styles.row2}>
                 <Field n="01" label={c.form.name} name="name" required />
                 <Field n="02" label={c.form.company} name="company" />
@@ -262,15 +291,22 @@ export function Contact() {
               <Needs n="06" label={c.form.needs} options={c.form.needOptions} />
               <Field n="07" label={c.form.message} name="message" as="textarea" required />
               <div className={styles.formFoot}>
-                <Button type="submit" variant="inverse" size="lg" icon={<ArrowRight size={16} />}>
-                  {cta.startConversation}
+                <Button type="submit" variant="inverse" size="lg" icon={<ArrowRight size={16} />} disabled={status === 'sending'}>
+                  {status === 'sending' ? c.form.sending : cta.startConversation}
                 </Button>
                 <a className={`${styles.email} t-mono`} href={`mailto:${brand.email}`}>
                   {brand.email}
                 </a>
               </div>
-              <p className={`${styles.sent} t-mono-sm`} role="status" aria-live="polite">
-                {sent ? 'Your mail app should now be open with the message ready to send.' : ''}
+              <p className={`${styles.sent} t-mono-sm`} role="status" aria-live="polite" data-status={status}>
+                {status === 'sent' && c.form.sent}
+                {status === 'fallback' && c.form.fallback}
+                {status === 'failed' && (
+                  <>
+                    {c.form.failed}{' '}
+                    <a href={`mailto:${brand.email}`}>{brand.email}</a>
+                  </>
+                )}
               </p>
             </form>
           </div>
