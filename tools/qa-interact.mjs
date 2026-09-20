@@ -12,7 +12,7 @@ const out = {}
 // 1. nav click → scroll + active state + header theme
 await pg.click('header a[data-nav-id="work"]')
 await wait(1800)
-out.navWork = await pg.evaluate(() => ({ scrollY: Math.round(window.scrollY), workTop: Math.round(document.getElementById('work').getBoundingClientRect().top + window.scrollY), active: document.querySelector('header a[aria-current=page]')?.textContent, theme: document.querySelector('header').dataset.theme }))
+out.navWork = await pg.evaluate(() => { const hh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0; const top = Math.round(document.getElementById('work').getBoundingClientRect().top + window.scrollY); return { scrollY: Math.round(window.scrollY), workTop: top, underHeader: Math.abs(window.scrollY - (top - hh)) < 2, active: document.querySelector('header a[aria-current=page]')?.textContent, theme: document.querySelector('header').dataset.theme } })
 // 2. open a case study from the rail
 await pg.click('[data-wk="tile"][data-index="3"] button[aria-label^="Open"]')
 await wait(700)
@@ -40,7 +40,7 @@ await pg.keyboard.type('zynnect')
 await wait(200)
 out.search = await pg.evaluate(() => Array.from(document.querySelectorAll('[role=dialog][aria-label="Search"] [role=option]')).map((o) => o.textContent.slice(0, 20)))
 await pg.keyboard.press('Enter'); await wait(1500)
-out.searchJump = await pg.evaluate(() => ({ scrollY: Math.round(window.scrollY), productsTop: Math.round(document.getElementById('products').getBoundingClientRect().top + window.scrollY), dialogHidden: document.querySelector('[role=dialog][aria-label="Search"]')?.getAttribute('aria-hidden') }))
+out.searchJump = await pg.evaluate(() => { const hh = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0; const top = Math.round(document.getElementById('products').getBoundingClientRect().top + window.scrollY); return { scrollY: Math.round(window.scrollY), productsTop: top, underHeader: Math.abs(window.scrollY - (top - hh)) < 2, dialogHidden: document.querySelector('[role=dialog][aria-label="Search"]')?.getAttribute('aria-hidden') } })
 // 6. form validation
 await pg.evaluate(() => document.getElementById('contact').scrollIntoView())
 await wait(400)

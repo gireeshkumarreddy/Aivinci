@@ -17,7 +17,7 @@
 /* ---- crowd band ------------------------------------------------------ */
 .band {
   position: relative;
-  height: calc(var(--header-h) + 23.7cqw);
+  height: 23.7cqw;
   overflow: hidden;
   background: #040506;
   isolation: isolate;
@@ -155,7 +155,7 @@
 
 /* ---- clients ------------------------------------------------------------ */
 .media {
-  padding: clamp(28px, 3vw, 48px) var(--gutter) clamp(56px, 5vw, 80px);
+  padding: clamp(28px, 3vw, 48px) var(--gutter) clamp(40px, 4vw, 64px);
 }
 
 .mediaHead {
@@ -171,18 +171,16 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* side headings on the left, the three portraits on the right */
+/* side headings on the left, the portrait on the right — both centred on one axis */
 .clients {
   display: grid;
-  grid-template-columns: minmax(200px, 24%) 1fr;
+  grid-template-columns: minmax(200px, 30%) 1fr;
   gap: clamp(20px, 3vw, 56px);
-  align-items: start;
+  align-items: center;
   padding-top: clamp(22px, 2.4vw, 36px);
 }
 
 .side {
-  position: sticky;
-  top: calc(var(--header-h) + 24px);
   display: flex;
   flex-direction: column;
   gap: 1.4cqw;
@@ -206,31 +204,19 @@
   color: rgba(255, 255, 255, 0.45);
 }
 
-.slots {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(12px, 1.4vw, 22px);
-  perspective: 1400px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.slot {
+/* the portrait: a 2:3 poster, capped so it never dwarfs the page */
+.portrait {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 30cqw);
   margin: 0;
   will-change: transform, opacity, filter;
 }
 
-.portrait {
-  position: relative;
-  margin: 0;
-}
-
-/* a 4:5 portrait card; the photograph is never stretched */
 .portraitPicture {
   position: relative;
   display: block;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 2 / 3;
   overflow: hidden;
   border-radius: 8px;
   background: #0b0d10;
@@ -249,7 +235,6 @@
 .portraitFrame {
   position: absolute;
   inset: 0;
-  aspect-ratio: 4 / 5;
   border-radius: 8px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   pointer-events: none;
@@ -257,22 +242,11 @@
 
 @media (hover: hover) {
   .section[data-revealed] .portrait:hover img {
-    transform: scale(1.035);
+    transform: scale(1.03);
   }
 }
 
-.slotCap {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-top: 12px;
-  color: rgba(255, 255, 255, 0.85);
-}
 
-.slotNote {
-  margin-left: auto;
-  color: rgba(255, 255, 255, 0.4);
-}
 
 /* ==================================================================
    Tablet / mobile
@@ -280,7 +254,7 @@
 @media (max-width: 1023px) {
   .band {
     height: auto;
-    min-height: clamp(520px, 118vw, 720px);
+    min-height: clamp(460px, 104vw, 640px);
   }
 
   .bandInner {
@@ -319,14 +293,14 @@
 
   .labels {
     left: var(--gutter);
-    top: calc(var(--header-h) + 22px);
+    top: 24px;
     font-size: 11px;
   }
 
   .callout {
     left: auto;
     right: var(--gutter);
-    top: calc(var(--header-h) + 22px);
+    top: 24px;
     text-align: right;
     font-size: 11px;
   }
@@ -377,32 +351,8 @@
     font-size: 11px;
   }
 
-  .slots {
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-  }
-}
-
-/* phones: the portraits become a swipeable row (4:5 cards stay legible) */
-@media (max-width: 599px) {
-  .slots {
-    display: flex;
-    gap: 12px;
-    margin: 0 calc(-1 * var(--gutter));
-    padding: 0 var(--gutter);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding: 0 var(--gutter);
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .slots::-webkit-scrollbar {
-    display: none;
-  }
-
-  .slot {
-    flex: 0 0 min(72vw, 320px);
-    scroll-snap-align: start;
+  .portrait {
+    justify-self: stretch;
+    width: 100%;
   }
 }

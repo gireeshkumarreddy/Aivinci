@@ -4,13 +4,16 @@
  */
 
 export const brand = {
-  name: 'Aivinci Studios',
+  name: 'Aivinci Creative Studio',
   nameA: 'Aivinci',
-  nameB: 'Studios',
+  nameB: 'Creative Studio',
   tagline: ['Ideas', 'People', 'Technology'],
   line: 'A brighter tomorrow.',
   keywords: ['Creative', 'Technology', 'People'],
-  email: 'hello@aivincistudios.com',
+  email: 'studio@aivinci.ai',
+  /** studio phone number — displayed as soon as the client supplies it */
+  phone: '',
+  site: 'https://aivinci.ai',
   year: '2026',
   /** the studio's channels, as supplied by Aivinci */
   social: [
@@ -38,6 +41,7 @@ export const cta = {
   viewWork: 'View Work',
   viewAllWork: 'View All Work',
   exploreZynnect: 'Explore Zynnect',
+  zynnectUrl: 'https://zynnect.com',
   startConversation: 'Start the Conversation',
   scrollToExplore: ['Scroll', 'to explore'],
 }
@@ -119,20 +123,19 @@ export const approach = {
   moreHuman: ['More', 'human', 'ideas.'],
   ideasIntoImpact: ['Ideas', 'into', 'impact.'],
   closing: 'We believe the most powerful ideas happen when human imagination meets technology — creating stories, products and experiences that make a real difference.',
-  footer: { left: ['Aivinci Studios', '© 2026'], center: 'Ideas for a brighter tomorrow', right: ['Creative', 'Technology', 'People'] },
+  footer: { left: ['Aivinci Creative Studio', '© 2026'], center: 'Ideas for a brighter tomorrow', right: ['Creative', 'Technology', 'People'] },
 }
 
 export interface WorkItem {
   n: string
   title: string
   category: string
-  placeholder?: boolean
 }
 
 export const work = {
   label: '04 / Our Work',
   heading: ['Ideas,', 'Brought to Life.'],
-  by: 'By Aivinci Studios',
+  by: 'By Aivinci Creative Studio',
   description: 'A selection of films, campaigns, visual experiences and digital projects created by Aivinci.',
   labels: ['People', 'Ideas', 'Technology', 'Real impact'],
   categories: ['Film', 'Brand', 'Content', 'Experiences'],
@@ -143,9 +146,6 @@ export const work = {
     { n: '02', title: 'Urban Pulse', category: 'Social Campaign' },
     { n: '03', title: 'Living Spaces', category: 'Digital Experience' },
     { n: '04', title: 'The Next You', category: 'AI Film' },
-    { n: '05', title: 'Untitled Project', category: 'Video placeholder', placeholder: true },
-    { n: '06', title: 'Untitled Project', category: 'Video placeholder', placeholder: true },
-    { n: '07', title: 'Untitled Project', category: 'Video placeholder', placeholder: true },
   ] as WorkItem[],
   featuredIndex: 3,
 }
@@ -164,7 +164,7 @@ export const aiVideo = {
     { id: 'video-01', role: 'first-hero-video', name: 'Video 01', title: 'Idea', sub: 'The first idea.', seconds: 23 },
     { id: 'video-02', role: 'video-two', name: 'Video 02', title: 'Concept', sub: 'The idea becomes a concept.', seconds: 30 },
     { id: 'video-03', role: 'video-three', name: 'Video 03', title: 'Creation', sub: 'Created with AI.', seconds: 15 },
-    { id: 'video-04', role: 'last-video', name: 'Video 04', title: 'Real video', sub: 'The final frame.', seconds: 30 },
+    { id: 'video-04', role: 'last-video', name: 'Video 04', title: 'Real video', sub: 'The final frame.', seconds: 26 },
   ],
   bottomLabels: ['The final frame', 'A real video'],
 }
@@ -176,19 +176,15 @@ export const workMedia = {
   heading: ['Explore', 'What’s Next.'],
   marker: '05',
   description: 'Aivinci develops original digital products that combine technology, intelligence and real-world utility.',
-  /** the client portraits supplied by Aivinci (reference folder: Image 1 … image 3) */
-  clients: {
-    label: 'Our Clients',
-    hint: 'People we create with',
-    heading: ['Faces behind', 'the ideas.'],
-    side: ['Ideas', 'People', 'Stories'],
-    caption: 'Portrait',
-    // order as requested by Aivinci: image 2 first, image 1 second
-    items: [
-      { n: '01', image: 'client-02', alt: 'Aivinci client portrait — in a patterned knit sweater, leaning on an amplifier' },
-      { n: '02', image: 'client-01', alt: 'Aivinci client portrait — seated on a chair in a black turtleneck against a green and black backdrop' },
-      { n: '03', image: 'client-03', alt: 'Aivinci client portrait — in a white knit shirt and sunglasses, warm studio light' },
-    ],
+  /** the studio portrait supplied with the client feedback ("Founder portrait.jpg") */
+  studio: {
+    label: 'The Studio',
+    hint: 'Ideas · Stories · Products · People',
+    heading: ['Ideas, stories,', 'products, people.'],
+    side: ['Film', 'Technology', 'Creative business'],
+    caption: 'A brighter tomorrow.',
+    image: 'founder',
+    alt: 'Dhinesh Ravi of Aivinci Creative Studio at his desk — "I don’t follow the future. I build with it."',
   },
 }
 
@@ -213,7 +209,6 @@ export const products = {
   },
   callout: ['Powerful tools', 'for a brighter', 'tomorrow.'],
   action: ['See Zynnect', 'in action.'],
-  actionTag: 'Product demo — video placeholder',
 }
 
 export const productSystem = {
@@ -248,11 +243,25 @@ export const contact = {
     name: 'Name',
     company: 'Company',
     email: 'Email',
-    projectType: 'Project Type',
-    message: 'Tell us about your project',
+    phone: 'Phone',
     budget: 'Budget',
-    projectTypes: ['AI Filmmaking', 'Brand & Commercial', 'Social & Digital', 'Creative Technology', 'Digital Experiences', 'Digital Product Development', 'VFX, Animation & Motion', 'Audio, Voice & Music'],
+    budgetHint: 'Approximate project budget',
+    budgets: ['$1k – $5k', '$5k – $10k', '$10k – $25k', '$25k – $50k', '$50k – $100k', '$100k+', 'Not sure yet'],
+    needs: 'What do you need?',
+    needOptions: ['AI Filmmaking', 'Brand & Commercial', 'Social & Digital', 'Creative Technology', 'Digital Experiences', 'Product Development', 'VFX, Animation & Motion', 'Audio, Voice & Music', 'Other'],
+    message: 'Tell us about your project',
+    optional: 'Optional',
   },
   together: ['A brighter', 'tomorrow', 'together.'],
-  footer: { left: ['Aivinci Studios', '© 2026'], center: ['Creative', 'Technology', 'People'], right: ['Ideas', 'People', 'Technology'] },
+  footer: { left: ['Aivinci Creative Studio', '© 2026'], center: ['Creative', 'Technology', 'People'], right: ['Ideas', 'People', 'Technology'] },
+}
+
+/** the dedicated site footer */
+export const footer = {
+  statement: ['Ideas for a', 'brighter tomorrow.'],
+  navTitle: 'Explore',
+  contactTitle: 'Contact',
+  followTitle: 'Follow',
+  legal: '© 2026 Aivinci Creative Studio. All rights reserved.',
+  keywords: ['Creative', 'Technology', 'People'],
 }

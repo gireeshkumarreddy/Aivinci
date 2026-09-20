@@ -594,7 +594,9 @@ VIDEO_SOURCES = {
     "first-hero-video": ["Video (1) HD.mp4", "Video 1 HD.mp4", "1st hero video HD.mp4", "1st hero video.mp4"],
     "video-two": ["Video 2 HD.mp4", "video 2 hd.mp4", "2 video HD.mp4", "2 video.mp4"],
     "video-three": ["video 3 hd.mp4", "Video 3 HD.mp4", "video 3.mp4"],
-    "last-video": ["last video HD.mp4", "Last video HD.mp4", "Video 4 HD.mp4", "video 4 hd.mp4", "last video.mp4"],
+    # the client will replace this slot with the "Car Video" asset: it takes precedence as soon as it exists
+    "last-video": ["Car Video.mp4", "Car video.mp4", "car video.mp4", "Car Video HD.mp4", "Car Video",
+                   "last video HD.mp4", "Last video HD.mp4", "Video 4 HD.mp4", "video 4 hd.mp4", "Video 4 HD", "last video.mp4"],
 }
 # (suffix, height, crf, maxrate, minimum source height)
 VIDEO_TIERS = (("1440", 1440, 25, "12M", 1440), ("1080", 1080, 24, "8M", 0), ("720", 720, 26, "4M", 0))
@@ -694,6 +696,27 @@ def build_clients():
             print(f"  {os.path.relpath(jpg[:-4] + '.webp', ROOT)}  {os.path.getsize(jpg[:-4] + '.webp')//1024} KB")
 
 
+# ---------------------------------------------------------------- founder portrait
+# The poster supplied with the client feedback ("Founder portrait.jpg", 1024 x 1536) replaces the
+# three client portraits: a desktop and a phone rendition, JPEG + WebP each, nothing cropped.
+FOUNDER = "Founder portrait.jpg"
+
+
+def build_founder():
+    from PIL import Image
+    src = os.path.join(SRC, FOUNDER)
+    if not os.path.exists(src):
+        raise SystemExit(f"missing {src}")
+    out = ensure("clients")
+    im = Image.open(src).convert("RGB")
+    for w, suffix in ((1024, ""), (640, "-sm")):
+        r = im if im.width <= w else im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
+        jpg = os.path.join(out, f"founder{suffix}.jpg")
+        r.save(jpg, "JPEG", quality=86, optimize=True, progressive=True)
+        r.save(jpg[:-4] + ".webp", "WEBP", quality=84, method=6)
+        print(f"  {os.path.relpath(jpg, ROOT)}  {r.width}x{r.height}  {os.path.getsize(jpg)//1024} KB / webp {os.path.getsize(jpg[:-4] + '.webp')//1024} KB")
+
+
 # ---------------------------------------------------------------- webp companions
 # The large alpha cutouts (the hand/phone layers, the audience) get a WebP sibling at ~1/4 the
 # weight; the site serves it through <picture> with the PNG as the fallback.
@@ -720,6 +743,7 @@ STEPS = {
     "logo": build_logo, "hero": build_hero, "services": build_services, "approach": build_approach,
     "work": build_work, "products": build_products, "system": build_system, "contact": build_contact,
     "video": build_video, "webp": build_webp, "clients": build_clients, "lens": build_lens_mask,
+    "founder": build_founder,
 }
 
 if __name__ == "__main__":

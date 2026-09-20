@@ -5,7 +5,7 @@ import { EASE, beat, gsap, isTouchDevice, useReducedMotion, useSectionReveal } f
 import styles from './WorkMedia.module.css'
 import { asset } from '../lib/assets'
 
-/** 07 / PRODUCTS / CLIENTS — dark → controlled light → the people Aivinci creates with. */
+/** 07 / PRODUCTS / THE STUDIO — dark → controlled light → the studio portrait. */
 export function WorkMedia() {
   const root = useRef<HTMLElement>(null)
   const scene = useRef<HTMLDivElement>(null)
@@ -24,16 +24,9 @@ export function WorkMedia() {
       beat(tl, q('[data-wm="subject"]'), { at: [700, 1400], dir: 'depth', amount: 1.2, from: { y: 24 }, to: { y: 0 }, ease: EASE.settle })
       beat(tl, q('[data-wm="bracket"]'), { at: [900, 1400], dir: 'fade', ease: EASE.soft })
       beat(tl, q('[data-wm="copy"]'), { at: [800, 1450], dir: 'depth', amount: 0.4, stagger: 0.07, ease: EASE.settle })
-      // Client portraits 900–1500 / 1050–1650 / 1200–1750: depth → foreground, one after the other
-      const slots = Array.from(q('[data-wm="slot"]'))
-      const at: [number, number][] = [
-        [900, 1500],
-        [1050, 1650],
-        [1200, 1750],
-      ]
-      slots.forEach((s, i) => beat(tl, s, { at: at[i] ?? [1200, 1750], dir: 'depth', amount: 0.8, from: { y: 28 }, to: { y: 0 }, ease: EASE.settle }))
-      // the portrait itself resolves inside its frame: BOTTOM → TOP reveal
-      tl.fromTo(q('[data-wm="portrait"]'), { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: 0.6, ease: EASE.cine, stagger: 0.15 }, 1.0)
+      // The studio portrait 900–1500: depth → foreground; its pixels resolve BOTTOM → TOP inside the frame
+      beat(tl, q('[data-wm="slot"]'), { at: [900, 1500], dir: 'depth', amount: 0.8, from: { y: 28 }, to: { y: 0 }, ease: EASE.settle })
+      tl.fromTo(q('[data-wm="portrait"]'), { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: 0.7, ease: EASE.cine }, 1.0)
       beat(tl, q('[data-wm="side"]'), { at: [850, 1400], dir: 'left', amount: 0.5, stagger: 0.07 })
       beat(tl, q('[data-wm="slot-copy"]'), { at: [1300, 1800], dir: 'fade', stagger: 0.06 })
     },
@@ -94,42 +87,32 @@ export function WorkMedia() {
           </div>
         </div>
 
-        {/* ---- clients: the people Aivinci creates with ------------------ */}
-        <div className={styles.media} aria-labelledby="clients-heading">
+        {/* ---- the studio: one portrait, the side headings beside it ------- */}
+        <div className={styles.media} aria-labelledby="studio-heading">
           <div className={styles.mediaHead} data-wm="slot-copy">
-            <span className="t-mono">{c.clients.label}</span>
-            <span className={`${styles.mediaHint} t-mono`}>{c.clients.hint}</span>
+            <span className="t-mono">{c.studio.label}</span>
+            <span className={`${styles.mediaHint} t-mono`}>{c.studio.hint}</span>
           </div>
           <div className={styles.clients}>
             <div className={styles.side}>
-              <h3 id="clients-heading" className={`${styles.sideHeading} t-headline-light`} data-wm="side">
-                <span>{c.clients.heading[0]}</span>
-                <span>{c.clients.heading[1]}</span>
+              <h3 id="studio-heading" className={`${styles.sideHeading} t-headline-light`} data-wm="side">
+                <span>{c.studio.heading[0]}</span>
+                <span>{c.studio.heading[1]}</span>
               </h3>
-              <Labels lines={c.clients.side} className={styles.sideLabels} data-wm="side" />
+              <Labels lines={c.studio.side} className={styles.sideLabels} data-wm="side" />
               <span className={`${styles.sideCount} t-mono`} data-wm="side">
-                0{c.clients.items.length} / portraits
+                {c.studio.caption}
               </span>
             </div>
-            <ul className={styles.slots} aria-label={c.clients.label}>
-              {c.clients.items.map((s) => (
-                <li key={s.n} className={styles.slot} data-wm="slot">
-                  <figure className={styles.portrait}>
-                    <picture className={styles.portraitPicture} data-wm="portrait">
-                      <source type="image/webp" media="(max-width: 767px)" srcSet={asset(`/assets/clients/${s.image}-sm.webp`)} />
-                      <source type="image/webp" srcSet={asset(`/assets/clients/${s.image}.webp`)} />
-                      <source media="(max-width: 767px)" srcSet={asset(`/assets/clients/${s.image}-sm.jpg`)} />
-                      <img src={asset(`/assets/clients/${s.image}.jpg`)} width={900} height={1125} alt={s.alt} loading="lazy" decoding="async" draggable={false} />
-                    </picture>
-                    <span className={styles.portraitFrame} aria-hidden="true" />
-                    <figcaption className={styles.slotCap} data-wm="slot-copy">
-                      <span className="t-mono">{s.n}</span>
-                      <span className={`${styles.slotNote} t-mono-sm`}>{c.clients.caption}</span>
-                    </figcaption>
-                  </figure>
-                </li>
-              ))}
-            </ul>
+            <figure className={styles.portrait} data-wm="slot">
+              <picture className={styles.portraitPicture} data-wm="portrait">
+                <source type="image/webp" media="(max-width: 767px)" srcSet={asset(`/assets/clients/${c.studio.image}-sm.webp`)} />
+                <source type="image/webp" srcSet={asset(`/assets/clients/${c.studio.image}.webp`)} />
+                <source media="(max-width: 767px)" srcSet={asset(`/assets/clients/${c.studio.image}-sm.jpg`)} />
+                <img src={asset(`/assets/clients/${c.studio.image}.jpg`)} width={1024} height={1536} alt={c.studio.alt} loading="lazy" decoding="async" draggable={false} />
+              </picture>
+              <span className={styles.portraitFrame} aria-hidden="true" />
+            </figure>
           </div>
         </div>
       </div>

@@ -170,7 +170,7 @@
 /* ---- contact -------------------------------------------------------------- */
 .contact {
   position: relative;
-  margin: 15.2cqw 3.6% 6.4cqw 77%;
+  margin: 17.6cqw 3.6% 5.6cqw 73%;
   z-index: 6;
   display: flex;
   flex-direction: column;
@@ -222,6 +222,93 @@
 
 .fieldLabel {
   color: rgba(255, 255, 255, 0.55);
+}
+
+.fieldNum {
+  margin-right: 0.8em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.fieldHint {
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* ---- what do you need? — pill checkboxes ---- */
+.needs {
+  margin: 0;
+  padding: 0.35cqw 0 0.25cqw;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  min-width: 0;
+}
+
+.needs legend {
+  padding: 0;
+  margin-bottom: 0.5cqw;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45cqw;
+  padding-bottom: 0.4cqw;
+}
+
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.5em 0.9em 0.5em 0.6em;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  font-size: max(11px, 0.78cqw);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+.pill:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.pillInput {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.pillBox {
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 0.3em;
+  background: var(--white);
+  flex: none;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pillInput:checked ~ .pillBox {
+  background: var(--ink);
+  box-shadow: inset 0 0 0 0.16em var(--white);
+}
+
+.pillInput:checked ~ .pillText {
+  color: var(--white);
+}
+
+.pill:has(.pillInput:checked) {
+  border-color: var(--white);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pill:has(.pillInput:focus-visible) {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
 }
 
 .input {
@@ -282,66 +369,6 @@
   font-size: max(9px, 0.74cqw);
 }
 
-/* ---- foot --------------------------------------------------------------- */
-.foot {
-  position: absolute;
-  left: 2.9%;
-  right: 3.6%;
-  bottom: 2.6%;
-  display: flex;
-  align-items: center;
-  gap: 2cqw;
-  font-size: max(9px, 0.72cqw);
-  z-index: 6;
-}
-
-.footLine {
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.28);
-}
-
-.footCenter,
-.footRight {
-  white-space: pre;
-}
-
-/* the studio's channels — the last element of the footer row */
-.social {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6cqw;
-  margin-left: 1.4cqw;
-}
-
-.socialLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: max(34px, 2.4cqw);
-  height: max(34px, 2.4cqw);
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: var(--white);
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease,
-    border-color 0.25s ease,
-    transform 0.35s var(--ease-out);
-}
-
-.socialLink:hover,
-.socialLink:focus-visible {
-  background: var(--white);
-  border-color: var(--white);
-  color: var(--ink);
-  transform: scale(1.06);
-}
-
-.socialLink:active {
-  transform: scale(0.96);
-}
-
 /* ==================================================================
    Tablet / mobile — installation on top, conversation below
    ================================================================== */
@@ -385,14 +412,14 @@
 
   .labelsLeft {
     left: var(--gutter);
-    top: calc(var(--header-h) + 18px);
+    top: 20px;
     font-size: 11px;
   }
 
   .hand {
     left: auto;
     right: var(--gutter);
-    top: calc(var(--header-h) + 14px);
+    top: 16px;
     transform: none;
   }
 
@@ -426,8 +453,7 @@
   }
 
   .contact,
-  .together,
-  .foot {
+  .together {
     position: static;
     left: auto;
     right: auto;
@@ -481,27 +507,27 @@
     font-size: 11px;
   }
 
-  .foot {
-    margin: 32px var(--gutter) 32px;
-    flex-wrap: wrap;
-    gap: 12px 16px;
-    font-size: 11px;
+  .needs {
+    padding: 10px 0 8px;
   }
 
-  .footLine {
-    display: none;
+  .needs legend {
+    margin-bottom: 10px;
   }
 
-  /* the channels take their own row so they stay visible and tappable */
-  .social {
-    width: 100%;
-    margin: 6px 0 0;
-    gap: 12px;
+  .pills {
+    gap: 8px;
+    padding-bottom: 6px;
   }
 
-  .socialLink {
-    width: 44px;
-    height: 44px;
+  .pill {
+    font-size: 13px;
+    padding: 9px 14px 9px 10px;
+    min-height: 40px;
+  }
+
+  .together {
+    margin-bottom: 40px;
   }
 }
 

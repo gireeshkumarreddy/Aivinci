@@ -101,7 +101,7 @@ export function Products() {
               {p.description}
             </p>
             <div data-pr="row">
-              <Button variant="inverse" icon={<ArrowRight size={15} />} onClick={() => scrollToId('product-system')}>
+              <Button variant="inverse" icon={<ArrowUpRight size={15} />} href={cta.zynnectUrl} target="_blank" rel="noopener noreferrer">
                 {cta.exploreZynnect}
               </Button>
             </div>
@@ -110,7 +110,7 @@ export function Products() {
 
         {/* ---- centre: the physical product --------------------------- */}
         <div ref={float} className={styles.hand} data-pr="hand">
-          <PhoneInHand onExplore={() => scrollToId('product-system')} />
+          <PhoneInHand onExplore={() => window.open(cta.zynnectUrl, '_blank', 'noopener,noreferrer')} />
         </div>
 
         {/* ---- right: callout + product film slot ---------------------- */}
@@ -128,7 +128,7 @@ export function Products() {
           </span>
           <div className={styles.stack}>
             <figure className={[styles.shot, slide === 0 ? styles.shotFront : styles.shotBack].join(' ')} data-pr="shot-1">
-              <MediaSlot poster={asset('/assets/products/action-card.jpg')} aspect="349 / 230" radius={4} playSize={52} tag={c.actionTag} alt={`${c.action.join(' ')} — ${c.actionTag}`} />
+              <MediaSlot poster={asset('/assets/products/action-card.jpg')} aspect="349 / 230" radius={4} alt={c.action.join(' ')} />
               <figcaption className={styles.shotCap}>
                 <Labels lines={c.action} rule={false} />
               </figcaption>
@@ -163,7 +163,7 @@ export function Products() {
           <span className={styles.cueLine} aria-hidden="true" />
           <ScrollCue tone="light" side="left" onClick={() => scrollToId('product-system')} />
         </div>
-        <Button variant="ghost" size="sm" icon={<ArrowUpRight size={13} />} className={styles.mobileExplore} onClick={() => scrollToId('product-system')} data-pr="foot">
+        <Button variant="ghost" size="sm" icon={<ArrowUpRight size={13} />} className={styles.mobileExplore} href={cta.zynnectUrl} target="_blank" rel="noopener noreferrer" data-pr="foot">
           {cta.exploreZynnect}
         </Button>
       </div>

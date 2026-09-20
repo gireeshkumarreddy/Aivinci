@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, IconButton } from '../components/ui/Button'
 import { Labels, ScrollCue, SectionLabel } from '../components/ui/Editorial'
-import { ArrowLeft, ArrowRight, Close } from '../components/ui/Icons'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Close } from '../components/ui/Icons'
 import { MediaSlot } from '../components/ui/MediaSlot'
 import { cta, work as c, type WorkItem } from '../data/content'
 import { EASE, beat, gsap, scrollToId, useReducedMotion, useScrollProgress, useSectionReveal } from '../lib/motion'
@@ -40,14 +40,7 @@ function CaseStudy({ item, onClose, onStep }: { item: WorkItem | null; onClose: 
         {item && (
           <div className={styles.panelBody} key={item.n}>
             <div className={styles.panelMedia}>
-              <MediaSlot
-                poster={item.placeholder ? undefined : asset(`/assets/work/tile-${item.n}.jpg`)}
-                aspect="16 / 9"
-                radius={6}
-                playSize={64}
-                tag="Production video pending"
-                alt={`${item.title} — ${item.category}`}
-              />
+              <MediaSlot poster={asset(`/assets/work/tile-${item.n}.jpg`)} aspect="16 / 9" radius={6} alt={`${item.title} — ${item.category}`} />
             </div>
             <div className={styles.panelText}>
               <p className={`${styles.panelCat} t-mono`}>{item.category}</p>
@@ -73,6 +66,8 @@ function CaseStudy({ item, onClose, onStep }: { item: WorkItem | null; onClose: 
 }
 
 const N = c.items.length
+/** the set is repeated so the loop is always wider than two viewports */
+const COPIES = 4
 /** one card passes every ~6.5 s — a slow, continuous drift */
 const SECONDS_PER_CARD = 6.5
 
@@ -104,8 +99,8 @@ export function Work() {
     tl.fromTo(q('[data-wk="tile"]'), { '--enter': 1, opacity: 0 }, { '--enter': 0, opacity: 1, duration: 0.85, ease: EASE.cine, stagger: inStep(0.09) }, 0.35)
     // Image/video content 500–1300: TOP → BOTTOM reveal inside a stable media mask
     tl.fromTo(q('[data-wk="media"]'), { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.55, ease: EASE.cine, stagger: inStep(0.09) }, 0.5)
-    // Icons + numbers: RIGHT → LEFT in 3D, trailing their cards
-    tl.fromTo(q('[data-wk="tile"] [data-play]'), { xPercent: -50, yPercent: -50, x: 44, rotationY: -70, opacity: 0, transformPerspective: 600 }, { xPercent: -50, yPercent: -50, x: 0, rotationY: 0, opacity: 1, duration: 0.6, ease: EASE.cine, stagger: inStep(0.09) }, 0.62)
+    // Open markers + numbers: RIGHT → LEFT in 3D, trailing their cards
+    tl.fromTo(q('[data-wk="tile"] [data-wk-open]'), { x: 44, rotationY: -70, opacity: 0, transformPerspective: 600 }, { x: 0, rotationY: 0, opacity: 1, duration: 0.6, ease: EASE.cine, stagger: inStep(0.09) }, 0.62)
     tl.fromTo(q('[data-wk="tile"] [data-wk-num]'), { x: 22, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: EASE.cine, stagger: inStep(0.09) }, 0.7)
     beat(tl, q('[data-wk="foot"]'), { at: [900, 1400], dir: 'bottom', amount: 0.35, stagger: 0.06 })
   })
@@ -382,7 +377,7 @@ export function Work() {
         {/* ---- video rail: the card set twice, flowing right → left ---- */}
         <div ref={rail} className={styles.rail} role="region" aria-label="Selected work — a continuously moving rail">
           <div ref={track} className={styles.railTrack}>
-            {[0, 1].map((copy) => (
+            {Array.from({ length: COPIES }, (_, copy) => copy).map((copy) => (
               <div key={copy} className={styles.railSet} role={copy ? undefined : 'list'} aria-hidden={copy ? true : undefined} inert={copy ? true : undefined}>
                 {c.items.map((it, i) => (
                   <article
@@ -397,17 +392,11 @@ export function Work() {
                     <div className={styles.tile3d}>
                       <div className={styles.tileBody}>
                         <div className={styles.tileMedia} data-wk="media">
-                          <MediaSlot
-                            poster={asset(`/assets/work/tile-${it.n}.jpg`)}
-                            aspect={i === c.featuredIndex ? '222 / 285' : '240 / 188'}
-                            radius={3}
-                            playSize={40}
-                            playPos={{ x: 'calc(100% - 34px)', y: 'calc(100% - 34px)' }}
-                            onActivate={() => openItem(i)}
-                            alt={`${it.title} — ${it.category}`}
-                            focus="50% 40%"
-                          />
-                          <button type="button" className={styles.tileHit} onClick={() => openItem(i)} aria-label={`Open ${it.title} — ${it.category}`} tabIndex={-1} />
+                          <MediaSlot poster={asset(`/assets/work/tile-${it.n}.jpg`)} aspect={i === c.featuredIndex ? '222 / 285' : '240 / 188'} radius={3} alt={`${it.title} — ${it.category}`} focus="50% 40%" />
+                          <button type="button" className={styles.tileHit} onClick={() => openItem(i)} aria-label={`Open ${it.title} — ${it.category}`} tabIndex={copy ? -1 : 0} />
+                          <span className={styles.tileOpen} data-wk-open aria-hidden="true">
+                            <ArrowUpRight size={14} />
+                          </span>
                         </div>
                         <span className={`${styles.tileNum} t-mono`} data-wk-num>{it.n}</span>
                         <span className={styles.tileMeta}>

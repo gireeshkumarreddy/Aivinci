@@ -13,6 +13,8 @@ interface Props {
   tagline?: boolean
   /** hide the wordmark (mark only) */
   wordmark?: boolean
+  /** "Creative Studio" on its own line under "Aivinci" (compact header widths) */
+  stacked?: boolean
   className?: string
   style?: CSSProperties
   /** the intro renders the same lockup and moves it into place */
@@ -25,7 +27,7 @@ interface Props {
  * the logo that travels *is* the logo that stays.
  */
 export const LogoLockup = forwardRef<HTMLDivElement, Props>(function LogoLockup(
-  { markHeight = 50, tagline = true, wordmark = true, className, style, id },
+  { markHeight = 50, tagline = true, wordmark = true, stacked = false, className, style, id },
   ref,
 ) {
   const markW = Math.round(markHeight * MARK_RATIO)
@@ -43,7 +45,7 @@ export const LogoLockup = forwardRef<HTMLDivElement, Props>(function LogoLockup(
       </span>
       {wordmark && (
         <span className={styles.word} data-lockup-word>
-          <span className={styles.name}>
+          <span className={[styles.name, stacked ? styles.stacked : ''].filter(Boolean).join(' ')}>
             <span className={styles.nameA}>{brand.nameA}</span> <span className={styles.nameB}>{brand.nameB}</span>
           </span>
           {tagline && (

@@ -194,6 +194,34 @@
   position: absolute;
   inset: 0;
   cursor: pointer;
+  z-index: 3;
+}
+
+/* the "open" marker in the card's corner (the case study opens on tap / click) */
+.tileOpen {
+  position: absolute;
+  right: 0.7cqw;
+  bottom: 0.9cqw;
+  width: 2cqw;
+  height: 2cqw;
+  min-width: 26px;
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--white);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  z-index: 2;
+  transition: background-color 0.25s ease;
+}
+
+.tile:hover .tileOpen {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .tileNum {
@@ -422,7 +450,7 @@
   .stage {
     aspect-ratio: auto;
     min-height: 0;
-    padding: calc(var(--header-h) + 16px) 0 40px;
+    padding: 26px 0 36px;
     display: flex;
     flex-direction: column;
   }
@@ -475,8 +503,8 @@
 
   .rail {
     height: auto;
-    margin-top: clamp(140px, 42vw, 300px);
-    padding: 20px 0 0;
+    margin-top: clamp(72px, 22vw, 160px);
+    padding: 12px 0 0;
   }
 
   .railTrack {
@@ -505,6 +533,13 @@
     left: 10px;
     bottom: 12px;
     font-size: 11px;
+  }
+
+  .tileOpen {
+    right: 10px;
+    bottom: 10px;
+    width: 30px;
+    height: 30px;
   }
 
   .tileMeta,
@@ -549,7 +584,7 @@
   }
 
   .ideas {
-    margin: 36px var(--gutter) 0;
+    margin: 26px var(--gutter) 0;
     font-size: 11px;
   }
 

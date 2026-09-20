@@ -66,7 +66,8 @@ export function Header({ locked, ready }: Props) {
     const update = () => {
       timer = 0
       const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-section]'))
-      const probe = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 88) * 0.6
+      // the chapter whose box sits right under the bar decides the theme and the active item
+      const probe = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 88) + 2
       // the deepest / last matching region wins (chapters can carry light sub-areas)
       let current: HTMLElement | null = null
       for (const s of sections) {
@@ -154,7 +155,7 @@ export function Header({ locked, ready }: Props) {
           }}
           aria-label={`${brand.name} — home`}
         >
-          <LogoLockup markHeight={isMobile ? 34 : isNarrowDesktop ? 42 : 50} tagline={!isMobile} />
+          <LogoLockup markHeight={isMobile ? 36 : isNarrowDesktop ? 42 : 50} tagline={!isMobile && !isNarrowDesktop} stacked={isMobile || isNarrowDesktop} />
         </a>
 
         <nav ref={navRef} className={styles.nav} data-hdr="nav" aria-label="Primary">

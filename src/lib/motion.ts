@@ -256,10 +256,13 @@ export function useScrollProgress(ref: RefObject<HTMLElement | null>, onProgress
   }, [ref])
 }
 
-/** Smoothly scroll to an in-page chapter (chapters compose their own top spacing under the fixed header). */
+/** Height of the fixed header (px) — chapters are scrolled to sit right underneath it. */
+export const headerHeight = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0
+
+/** Smoothly scroll to an in-page chapter so its top edge lands just below the header bar. */
 export function scrollToId(id: string) {
   const el = document.getElementById(id)
   if (!el) return
-  const top = el.getBoundingClientRect().top + window.scrollY
-  window.scrollTo({ top, behavior: 'smooth' })
+  const top = el.getBoundingClientRect().top + window.scrollY - headerHeight()
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
 }

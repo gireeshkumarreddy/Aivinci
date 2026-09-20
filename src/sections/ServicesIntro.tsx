@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { Labels, ScrollCue, SectionLabel } from '../components/ui/Editorial'
-import { MediaSlot } from '../components/ui/MediaSlot'
 import { servicesIntro as c } from '../data/content'
 import { EASE, beat, scrollToId, useSectionReveal } from '../lib/motion'
 import styles from './ServicesIntro.module.css'
@@ -21,10 +20,9 @@ export function ServicesIntro() {
     beat(tl, q('[data-si="labels"]'), { at: [450, 950], dir: 'fade' })
     // SERVICES 500–1150: BOTTOM → TOP, oversized, slow rise out of the section edge
     tl.fromTo(q('[data-si="giant"]'), { yPercent: 100 }, { yPercent: 0, duration: 0.65, ease: EASE.cine }, 0.5)
-    // Service cards 700–1500: BOTTOM → TOP, staggered — every card the same language
-    beat(tl, q('[data-si="card"]'), { at: [700, 1500], dir: 'bottom', stagger: 0.14 })
-    // Technology copy 1150–1600: restrained plane reveal
-    beat(tl, q('[data-si="copy"]'), { at: [1150, 1600], dir: 'bottom', amount: 0.3, stagger: 0.06 })
+    // Technology copy 700–1300: BOTTOM → TOP, restrained, one element after the other
+    beat(tl, q('[data-si="copy"]'), { at: [700, 1300], dir: 'bottom', amount: 0.3, stagger: 0.07 })
+    beat(tl, q('[data-si="strip"] > *'), { at: [1000, 1450], dir: 'bottom', amount: 0.25, stagger: 0.05 })
     // Settle 1500–1850: final lock
     tl.fromTo(q('[data-si="image"]'), { scale: 1.006 }, { scale: 1, duration: 0.35, ease: EASE.settle }, 1.5)
   })
@@ -70,9 +68,13 @@ export function ServicesIntro() {
         </div>
       </div>
 
-      {/* ---- paper: the technology copy + media ----------------------- */}
+      {/* ---- paper: the technology copy, one editorial grid ------------ */}
       <div className={styles.paper} data-section data-theme="light" data-nav="services">
         <div className={styles.paperGrid}>
+          <div className={styles.ideas} data-si="copy">
+            <Labels lines={c.ideasIntoImpact} />
+          </div>
+
           <div className={styles.meta} data-si="copy">
             <SectionLabel className={styles.label}>{c.label}</SectionLabel>
             <p className={styles.metaText}>
@@ -93,20 +95,15 @@ export function ServicesIntro() {
             <span className="rule" aria-hidden="true" />
           </div>
 
-          <div className={styles.ideas} data-si="copy">
-            <Labels lines={c.ideasIntoImpact} />
-          </div>
-
-          <div className={styles.cardA} data-si="card">
-            <MediaSlot poster={asset('/assets/services/card-crew.jpg')} aspect="492 / 190" radius={4} playControl={false} tag="Video placeholder" alt="Crew silhouettes on a lit film set" />
-          </div>
-
-          <div className={styles.cardB} data-si="card">
-            <div className={styles.cardBInner}>
-              <Labels lines={c.cardText} className={styles.cardBText} />
-              <img src={asset('/assets/services/card-lens.jpg')} width={240} height={152} alt="" loading="lazy" decoding="async" className={styles.lens} draggable={false} />
-            </div>
-          </div>
+          {/* the four words that framed the old media card, as an editorial strip */}
+          <ul className={`${styles.strip} t-label-wide`} data-si="strip" aria-label="What we create">
+            {c.cardText.map((w, i) => (
+              <li key={w} className={styles.stripItem}>
+                <span className={`${styles.stripNum} t-mono`}>0{i + 1}</span>
+                <span>{w}</span>
+              </li>
+            ))}
+          </ul>
 
           <div className={styles.cue} data-si="copy">
             <ScrollCue onClick={() => scrollToId('services-grid')} />

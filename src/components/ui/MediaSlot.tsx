@@ -22,7 +22,7 @@ export interface MediaSlotProps {
   aspect?: string
   /** rounded corner radius */
   radius?: number | string
-  /** small mono tag in the corner (e.g. "Video placeholder") */
+  /** small mono tag in the corner (shown only on a live video) */
   tag?: string
   /** decorative number/caption slots */
   children?: ReactNode
@@ -137,10 +137,12 @@ export function MediaSlot({
       onActivate()
       return
     }
-    // placeholder: a short, honest preview beat
+    // an image with nothing to open: a short preview drift on tap
     setPreviewing(true)
     window.setTimeout(() => setPreviewing(false), 2400)
   }
+  // without footage the slot is an image: no player affordance, no tag
+  const showPlay = hasVideo && playControl && !(playing && autoplay)
 
   const videoSrc = src ? (isNarrow() ? src.mobile : src.large && wantsLarge() ? src.large : src.desktop) : undefined
 
@@ -151,7 +153,7 @@ export function MediaSlot({
         .filter(Boolean)
         .join(' ')}
       style={{ aspectRatio: aspect, borderRadius: radius, ...style }}
-      data-video={hasVideo ? 'live' : 'placeholder'}
+      data-video={hasVideo ? 'live' : 'image'}
     >
       {poster ? (
         <img
@@ -183,22 +185,21 @@ export function MediaSlot({
           aria-labelledby={labelledBy}
         />
       )}
-      {playControl && !(playing && autoplay) && (
+      {showPlay && (
         <button
           type="button"
           className={styles.play}
           data-play
           style={{ width: playSize, height: playSize, left: playPos?.x, top: playPos?.y }}
           onClick={activate}
-          aria-label={hasVideo ? (playing ? 'Pause video' : 'Play video') : onActivate ? 'Open' : 'Video placeholder'}
+          aria-label={playing ? 'Pause video' : 'Play video'}
         >
           <Play size={Math.round(playSize * 0.42)} />
         </button>
       )}
-      {!playControl && (onActivate || !hasVideo) && (
-        <button type="button" className={styles.hit} onClick={activate} aria-label={onActivate ? 'Open' : 'Video placeholder'} />
-      )}
-      {tag && <span className={`${styles.tag} t-mono-sm`}>{tag}</span>}
+      {!hasVideo && onActivate && <button type="button" className={styles.hit} onClick={activate} aria-label="Open" />}
+      {hasVideo && !playControl && <button type="button" className={styles.hit} onClick={activate} aria-label={playing ? 'Pause video' : 'Play video'} />}
+      {hasVideo && tag && <span className={`${styles.tag} t-mono-sm`}>{tag}</span>}
       {children}
     </div>
   )

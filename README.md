@@ -29,7 +29,8 @@ src/
   components/ui/            Button, MediaSlot (video-ready container), Handwriting (draw-on copy), editorial bits
   components/product/       PhoneInHand (layered raster + live screen), ZynnectScreen (real HTML product UI)
   sections/                 00 Intro · 02 Hero · 03 ServicesIntro · 04 ServicesGrid · 05 Approach · 06 Work
-                            06A AiVideoStory · 07 WorkMedia · 08 Products · 09 ProductSystem · 10 Contact
+                            06A AiVideoStory · 07 WorkMedia (The Studio) · 08 Products · 09 ProductSystem
+                            10 Contact · Footer
 tools/
   build_assets.py           derives every web asset from the reference art (cutouts, inpainting, crops, video)
   qa.mjs                    headless captures + overflow/console audits at any viewport (`?settled` mode)
@@ -62,19 +63,20 @@ writes `src/data/video-manifest.json` so the player knows which renditions exist
 | VIDEO 01 — first Hero video | tiger | `Video (1) HD.mp4` → `1st hero video.mp4` | `first-hero-video-1440/1080/720.mp4` |
 | VIDEO 02 — video two | Ganesh | `Video 2 HD.mp4` → `2 video.mp4` | `video-two-1440/1080/720.mp4` |
 | VIDEO 03 — video three | the fight | `video 3 hd.mp4` → `video 3.mp4` | `video-three-1440/1080/720.mp4` |
-| VIDEO 04 — last video | Hanuman | `last video HD.mp4` → `last video.mp4` | `last-video-(1440)/1080/720.mp4` |
+| VIDEO 04 — last video | the car film | `Car Video.mp4` → `Video 4 HD` → `last video.mp4` | `last-video-1440/1080/720.mp4` |
 
 The 1440p tier is cut only from a 4K master and is served to large / high-density desktop screens (not
 when the browser asks to save data); phones get 720p, everything else 1080p. Re-run
 `python tools/build_assets.py video` after dropping a new master in the folder — outputs are re-encoded
 only when their source changed.
 
-Every other video area (service cards, work tiles, the product film) is a `MediaSlot` placeholder: swap in
-a `src` prop and it becomes a live video without touching the layout.
+Every other media area (service cards, work tiles, the product film, the hero feature) is an image: a
+`MediaSlot` without `src` renders as a plain photograph (no player affordance); pass a `src` and it becomes
+a live video without touching the layout.
 
-The `clients` step turns the three client portraits supplied by Aivinci (`Image 1.jpg` … `image 3.jpg` in
-the reference folder) into 4:5 portrait cards (`public/assets/clients`, JPEG + WebP, desktop + phone) for
-the "Our Clients" block of the Products chapter.
+The `founder` step prepares the studio portrait supplied with the client feedback (`Founder portrait.jpg`
+in the reference folder) for "The Studio" block of the Products chapter (JPEG + WebP, desktop + phone);
+`clients` still builds the earlier portrait cards should they be needed again.
 
 ## Motion
 

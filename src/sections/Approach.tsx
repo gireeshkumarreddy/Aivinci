@@ -5,45 +5,42 @@ import { EASE, beat, scrollToId, useSectionReveal } from '../lib/motion'
 import styles from './Approach.module.css'
 import { asset } from '../lib/assets'
 
-interface Frame {
+interface Photo {
   id: string
   src: string
   w: number
   h: number
-  /** % of the stage: left, top, width, height */
-  box: [number, number, number, number]
   alt: string
-  framed?: boolean
-  focus?: string
 }
 
-const FRAMES: Frame[] = [
-  { id: 'eye', src: asset('/assets/approach/eye.jpg'), w: 332, h: 305, box: [18.4, 4.2, 21.6, 40.1], alt: 'A close-up of an eye catching warm light' },
-  { id: 'profile', src: asset('/assets/approach/profile.jpg'), w: 175, h: 177, box: [33.7, 20.1, 11.9, 24.2], alt: 'A profile in low light', framed: true },
-  { id: 'set', src: asset('/assets/approach/set.jpg'), w: 429, h: 204, box: [49.8, 4.2, 27.9, 26.8], alt: 'A film crew at work on a lit set' },
-  { id: 'portrait', src: asset('/assets/approach/portrait.jpg'), w: 88, h: 141, box: [88.7, 7, 5.7, 18.6], alt: 'Portrait in a doorway of light' },
-  { id: 'silhouette', src: asset('/assets/approach/silhouette.jpg'), w: 80, h: 124, box: [3.6, 63.2, 5.2, 16.3], alt: 'A silhouette against a lit wall' },
-  { id: 'mountains', src: asset('/assets/approach/mountains.jpg'), w: 407, h: 196, box: [22.8, 65.8, 26.5, 25.8], alt: 'Looking out over mountains at dusk' },
-  { id: 'hands', src: asset('/assets/approach/hands.jpg'), w: 116, h: 103, box: [51.9, 64.5, 7.6, 13.6], alt: 'Two hands reaching for each other' },
-  { id: 'lighttable', src: asset('/assets/approach/lighttable.jpg'), w: 261, h: 125, box: [73.6, 62.2, 17, 16.4], alt: 'Hands reviewing frames on a light table' },
-]
+const PHOTOS: Record<string, Photo> = {
+  eye: { id: 'eye', src: asset('/assets/approach/eye.jpg'), w: 332, h: 305, alt: 'A close-up of an eye catching warm light' },
+  eyeTight: { id: 'eye-tight', src: asset('/assets/approach/eye-tight.jpg'), w: 227, h: 305, alt: 'A close-up of an eye catching warm light' },
+  profile: { id: 'profile', src: asset('/assets/approach/profile.jpg'), w: 175, h: 177, alt: 'A profile in low light' },
+  set: { id: 'set', src: asset('/assets/approach/set.jpg'), w: 429, h: 204, alt: 'A film crew at work on a lit set' },
+  portrait: { id: 'portrait', src: asset('/assets/approach/portrait.jpg'), w: 88, h: 141, alt: 'Portrait in a doorway of light' },
+  silhouette: { id: 'silhouette', src: asset('/assets/approach/silhouette.jpg'), w: 80, h: 124, alt: 'A silhouette against a lit wall' },
+  mountains: { id: 'mountains', src: asset('/assets/approach/mountains.jpg'), w: 407, h: 196, alt: 'Looking out over mountains at dusk' },
+  hands: { id: 'hands', src: asset('/assets/approach/hands.jpg'), w: 116, h: 103, alt: 'Two hands reaching for each other' },
+  lighttable: { id: 'lighttable', src: asset('/assets/approach/lighttable.jpg'), w: 261, h: 125, alt: 'Hands reviewing frames on a light table' },
+}
 
 const CROSSES: [number, number][] = [
-  [38.9, 6.6], [5.9, 83.8], [50.6, 79.6], [72.6, 62.6], [89.8, 67.1], [95.7, 6.6],
+  [38.9, 3.2], [95.7, 3.2], [3.2, 96.4], [50.6, 96.4],
 ]
 
-function Frame({ f, index }: { f: Frame; index: number }) {
-  const [l, t, w, h] = f.box
+/** A photograph in the collage: a hairline frame, the pixels revealed inside a mask. */
+function Frame({ p, className, framed, ratio, focus }: { p: Photo; className?: string; framed?: boolean; ratio?: string; focus?: string }) {
   return (
     <figure
-      className={[styles.frame, f.framed ? styles.framed : ''].filter(Boolean).join(' ')}
-      style={{ '--l': `${l}%`, '--t': `${t}%`, '--w': `${w}%`, '--h': `${h}%`, '--i': index } as CSSProperties}
+      className={[styles.frame, framed ? styles.framed : '', className].filter(Boolean).join(' ')}
+      style={{ aspectRatio: ratio ?? `${p.w} / ${p.h}` } as CSSProperties}
       data-ap="frame"
-      data-frame={f.id}
+      data-frame={p.id}
     >
       <span className={styles.frameEdge} data-ap="edge" aria-hidden="true" />
       <span className={styles.mask} data-ap="mask">
-        <img src={f.src} width={f.w} height={f.h} alt={f.alt} loading="lazy" decoding="async" data-ap="img" draggable={false} style={{ objectPosition: f.focus }} />
+        <img src={p.src} width={p.w} height={p.h} alt={p.alt} loading="lazy" decoding="async" data-ap="img" draggable={false} style={{ objectPosition: focus }} />
       </span>
     </figure>
   )
@@ -73,10 +70,38 @@ export function Approach() {
     beat(tl, q('[data-ap="final"]'), { at: [1050, 1500], dir: 'fade', stagger: 0.06, ease: EASE.soft })
   })
 
-  const step = (i: number) => c.steps[i]
+  const human = (
+    <svg className={styles.giantLine1} viewBox="0 0 780 100" preserveAspectRatio="none" data-ap="giant">
+      <text x="0" y="98" textLength="780" lengthAdjust="spacingAndGlyphs">
+        {c.giant[0]}
+      </text>
+    </svg>
+  )
+  const creativity = (
+    <svg className={styles.giantLine2} viewBox="0 0 1425 104" preserveAspectRatio="none" data-ap="giant">
+      <text x="0" y="102" textLength="1425" lengthAdjust="spacingAndGlyphs">
+        {c.giant[1]}
+      </text>
+    </svg>
+  )
+
+  const method = (
+    <ol className={styles.method} data-ap="label" aria-label="How we work">
+      {c.steps.map((s) => (
+        <li key={s.n} className={styles.methodStep}>
+          <span className="t-mono">{s.n}</span>
+          <span className={styles.methodText}>
+            <strong>{s.name}</strong>
+            <span>{s.body}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+  )
 
   return (
     <section ref={root} id="approach" className={styles.section} data-section data-theme="light" data-nav="approach" aria-labelledby="approach-heading">
+      {/* ================= desktop: the editorial collage, row by row — nothing overlaps ================= */}
       <div className={styles.stage}>
         <div className={styles.grid} data-ap="grid" aria-hidden="true">
           {CROSSES.map(([x, y], i) => (
@@ -84,93 +109,78 @@ export function Approach() {
           ))}
         </div>
 
-        {/* ---- heading block ------------------------------------------- */}
-        <div className={styles.headBlock}>
-          <SectionLabel className={styles.label} data-ap="head">
-            {c.label}
-          </SectionLabel>
-          <h2 id="approach-heading" className={`${styles.keywords} t-display`} data-ap="head">
-            {c.keywords.map((k) => (
-              <span key={k}>{k}</span>
-            ))}
-          </h2>
-          <span className={`rule ${styles.headRule}`} data-ap="head" aria-hidden="true" />
-          <p className={styles.tagline} data-ap="head">
-            {c.tagline[0]}
-            <br />
-            {c.tagline[1]}
-          </p>
+        {/* ---- row 1: heading · eye (with the framed profile) · set · portrait; HUMAN under the set ---- */}
+        <div className={styles.top}>
+          <div className={styles.headBlock}>
+            <SectionLabel className={styles.label} data-ap="head">
+              {c.label}
+            </SectionLabel>
+            <h2 id="approach-heading" className={`${styles.keywords} t-display`} data-ap="head">
+              {c.keywords.map((k) => (
+                <span key={k}>{k}</span>
+              ))}
+            </h2>
+            <span className={`rule ${styles.headRule}`} data-ap="head" aria-hidden="true" />
+            <p className={styles.tagline} data-ap="head">
+              {c.tagline[0]}
+              <br />
+              {c.tagline[1]}
+            </p>
+          </div>
+
+          <div className={styles.eyeCell}>
+            <Frame p={PHOTOS.eye} className={styles.eye} />
+            <Frame p={PHOTOS.profile} className={styles.profile} framed />
+          </div>
+          <Labels lines={c.labelA} className={styles.labelA} data-ap="label" />
+
+          <Frame p={PHOTOS.set} className={styles.set} />
+          <Labels lines={c.labelB} className={styles.labelB} data-ap="label" />
+          <div className={styles.portraitCell}>
+            <Frame p={PHOTOS.portrait} className={styles.portrait} />
+            <Labels lines={c.moreHuman} className={styles.moreHuman} rule={false} data-ap="label" />
+          </div>
+
+          <div className={styles.human} aria-hidden="true">
+            {human}
+          </div>
         </div>
 
-        {/* ---- frames ---------------------------------------------------- */}
-        {FRAMES.map((f, i) => (
-          <Frame key={f.id} f={f} index={i} />
-        ))}
-
-        {/* ---- numbered markers (as in the reference) + the four-step method ---- */}
-        {[
-          { i: 0, l: 16.6, t: 36.4 },
-          { i: 1, l: 89.5, t: 30.2 },
-          { i: 2, l: 21.2, t: 68.6 },
-          { i: 3, l: 91.7, t: 63.4 },
-        ].map(({ i, l, t }) => (
-          <div key={i} className={styles.marker} style={{ left: `${l}%`, top: `${t}%` }} data-ap="icon">
-            <span className="t-mono">{step(i).n}</span>
-            <span className={styles.stepLine} aria-hidden="true" />
-          </div>
-        ))}
-        <ol className={styles.method} data-ap="label">
-          {c.steps.map((s) => (
-            <li key={s.n} className={styles.methodStep}>
-              <span className="t-mono">{s.n}</span>
-              <span className={styles.methodText}>
-                <strong>{s.name}</strong>
-                <span>{s.body}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-
-        {/* ---- editorial labels -------------------------------------------- */}
-        <Labels lines={c.labelA} className={styles.labelA} data-ap="label" />
-        <Labels lines={c.labelB} className={styles.labelB} data-ap="label" />
-        <Labels lines={c.moreHuman} className={styles.moreHuman} rule={false} data-ap="label" />
-        <Labels lines={c.labelC} className={styles.labelC} data-ap="label" />
-        <Labels lines={c.labelD} className={styles.labelD} data-ap="label" />
-
-        {/* ---- giant editorial typography ---------------------------------- */}
-        <div className={styles.giant} aria-hidden="true">
-          <svg className={styles.giantLine1} viewBox="0 0 780 100" preserveAspectRatio="none" data-ap="giant">
-            <text x="0" y="98" textLength="780" lengthAdjust="spacingAndGlyphs">
-              {c.giant[0]}
-            </text>
-          </svg>
-          <svg className={styles.giantLine2} viewBox="0 0 1425 104" preserveAspectRatio="none" data-ap="giant">
-            <text x="0" y="102" textLength="1425" lengthAdjust="spacingAndGlyphs">
-              {c.giant[1]}
-            </text>
-          </svg>
+        {/* ---- row 2: CREATIVITY, full width, in its own band ---- */}
+        <div className={styles.creativity} aria-hidden="true">
+          {creativity}
         </div>
         <p className="sr-only">{c.giant.join(' ')}</p>
 
-        {/* ---- ideas into impact + closing ---------------------------------- */}
-        <div className={styles.impact} data-ap="label">
-          <span className={styles.impactLine} aria-hidden="true" />
-          <h3 className={`${styles.impactHead} t-title`}>
-            {c.ideasIntoImpact.map((l) => (
-              <span key={l}>{l}</span>
-            ))}
-          </h3>
-          <span className="rule" aria-hidden="true" />
-        </div>
-        <p className={styles.closing} data-ap="final">
-          {c.body}
-        </p>
-        <div className={styles.cue} data-ap="icon">
-          <ScrollCue onClick={() => scrollToId('work')} />
+        {/* ---- row 3: the four-step method ---- */}
+        {method}
+
+        {/* ---- row 4: the lower collage · ideas into impact ---- */}
+        <div className={styles.bottom}>
+          <Frame p={PHOTOS.silhouette} className={styles.silhouette} />
+          <Labels lines={c.labelC} className={styles.labelC} data-ap="label" />
+          <Frame p={PHOTOS.mountains} className={styles.mountains} />
+          <Frame p={PHOTOS.hands} className={styles.hands} />
+          <Labels lines={c.labelD} className={styles.labelD} data-ap="label" />
+          <div className={styles.impact} data-ap="label">
+            <h3 className={`${styles.impactHead} t-title`}>
+              {c.ideasIntoImpact.map((l) => (
+                <span key={l}>{l}</span>
+              ))}
+            </h3>
+            <span className="rule" aria-hidden="true" />
+            <p className={styles.closing} data-ap="final">
+              {c.body}
+            </p>
+          </div>
+          <div className={styles.lightCell}>
+            <Frame p={PHOTOS.lighttable} className={styles.lighttable} />
+            <div className={styles.cue} data-ap="icon">
+              <ScrollCue onClick={() => scrollToId('work')} />
+            </div>
+          </div>
         </div>
 
-        {/* ---- footer row ------------------------------------------------- */}
         <div className={`${styles.foot} t-label`} data-ap="final">
           <span>
             {c.footer.left[0]}
@@ -182,7 +192,7 @@ export function Approach() {
         </div>
       </div>
 
-      {/* ---- mobile / tablet composition ------------------------------------ */}
+      {/* ================= tablet / mobile: a vertical editorial sequence ================= */}
       <div className={styles.mobile}>
         <div className={styles.mHead}>
           <SectionLabel data-ap="head">{c.label}</SectionLabel>
@@ -198,45 +208,31 @@ export function Approach() {
           </p>
         </div>
 
+        {/* four photographs, one grid — the labels sit under them, never on them */}
         <div className={styles.mCollage}>
-          <div className={styles.mFrame} style={{ gridArea: 'a' }} data-ap="frame">
-            <span className={styles.mask} data-ap="mask">
-              <img src={asset('/assets/approach/eye-tight.jpg')} width={227} height={305} alt={FRAMES[0].alt} loading="lazy" decoding="async" data-ap="img" draggable={false} />
-            </span>
-          </div>
-          <div className={styles.mFrame} style={{ gridArea: 'b' }} data-ap="frame">
-            <span className={styles.mask} data-ap="mask">
-              <img src={asset('/assets/approach/set.jpg')} width={429} height={204} alt={FRAMES[2].alt} loading="lazy" decoding="async" data-ap="img" draggable={false} />
-            </span>
-          </div>
-          <Labels lines={c.labelA} className={styles.mLabelA} style={{ gridArea: 'c' }} data-ap="label" />
-          <div className={styles.mFrame} style={{ gridArea: 'd' }} data-ap="frame">
-            <span className={styles.mask} data-ap="mask">
-              <img src={asset('/assets/approach/profile.jpg')} width={175} height={177} alt={FRAMES[1].alt} loading="lazy" decoding="async" data-ap="img" draggable={false} />
-            </span>
-          </div>
+          <Frame p={PHOTOS.eyeTight} ratio="4 / 5" />
+          <Frame p={PHOTOS.set} ratio="4 / 5" focus="55% 50%" />
+          <Frame p={PHOTOS.profile} ratio="4 / 5" />
+          <Frame p={PHOTOS.mountains} ratio="4 / 5" focus="50% 40%" />
+        </div>
+        <div className={styles.mLabels}>
+          <Labels lines={c.labelA} data-ap="label" />
+          <Labels lines={c.labelB} data-ap="label" />
+          <Labels lines={c.moreHuman} data-ap="label" />
         </div>
 
         <div className={styles.mGiant} aria-hidden="true">
-          <svg viewBox="0 0 780 100" preserveAspectRatio="none" data-ap="giant">
-            <text x="0" y="98" textLength="780" lengthAdjust="spacingAndGlyphs">
-              {c.giant[0]}
-            </text>
-          </svg>
-          <svg viewBox="0 0 1425 104" preserveAspectRatio="none" data-ap="giant">
-            <text x="0" y="102" textLength="1425" lengthAdjust="spacingAndGlyphs">
-              {c.giant[1]}
-            </text>
-          </svg>
+          {human}
+          {creativity}
         </div>
 
-        <ol className={styles.mSteps}>
+        <ol className={styles.mSteps} aria-label="How we work">
           {c.steps.map((s, i) => (
             <li key={s.n} className={styles.mStep} data-ap="icon">
               <div className={styles.mStepMedia}>
                 <span className={styles.mask} data-ap="mask">
                   <img
-                    src={[asset('/assets/approach/portrait.jpg'), asset('/assets/approach/mountains.jpg'), asset('/assets/approach/hands.jpg'), asset('/assets/approach/lighttable.jpg')][i]}
+                    src={[PHOTOS.portrait, PHOTOS.hands, PHOTOS.lighttable, PHOTOS.silhouette][i].src}
                     alt=""
                     loading="lazy"
                     decoding="async"

@@ -32,8 +32,6 @@ function ServiceCard({ s, index }: { s: Service; index: number }) {
           poster={asset(`/assets/services/grid-${s.media}.jpg`)}
           aspect="372 / 176"
           radius={3}
-          playControl={false}
-          tag="Video placeholder"
           alt={`${s.title.join(' ')} — ${s.caption.join(' ')}`}
           className={styles.slot}
         />
@@ -79,7 +77,6 @@ export function ServicesGrid() {
   return (
     <section ref={root} id="services-grid" className={styles.section} data-section data-theme="light" data-nav="services" aria-label="Services catalogue">
       <div className={styles.top}>
-        <Labels lines={c.topLeft} className={styles.topLeft} data-sg="top" />
         <p className={styles.topCenter} data-sg="top">
           {c.topCenter}
         </p>

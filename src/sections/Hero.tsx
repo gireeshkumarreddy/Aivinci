@@ -109,7 +109,7 @@ export function Hero({ start }: Props) {
   )
 
   return (
-    <section ref={root} id="home" className={styles.hero} data-section data-theme="light" aria-label="Aivinci Studios — We create what’s next">
+    <section ref={root} id="home" className={styles.hero} data-section data-theme="light" aria-label="Aivinci Creative Studio — We create what’s next">
       <div className={styles.canvas} data-hero="canvas" aria-hidden="true" />
       <div className={styles.vignette} data-hero="vignette" aria-hidden="true" />
 
@@ -215,21 +215,17 @@ export function Hero({ start }: Props) {
             <span className={styles.year}>{hero.featured.year}</span>
           </div>
           <p className={`${styles.featType} t-body`}>{hero.featured.type}</p>
+          {/* the featured film's own frame (the reference poster carried a baked player control) */}
           <MediaSlot
-            poster={asset('/assets/hero/featured-poster.jpg')}
+            poster={asset('/assets/work/tile-04.jpg')}
             aspect="322 / 168"
             radius={8}
-            playSize={54}
-            playPos={{ x: '59%', y: '54%' }}
+            focus="50% 26%"
             className={styles.featMedia}
             onActivate={() => scrollToId('work')}
             alt="The Next You — AI Film"
             eager
-          >
-            <span className={styles.progress} aria-hidden="true">
-              <span />
-            </span>
-          </MediaSlot>
+          />
         </div>
       </div>
     </section>

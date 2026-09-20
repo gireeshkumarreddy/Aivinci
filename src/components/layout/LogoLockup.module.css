@@ -42,6 +42,18 @@
   white-space: nowrap;
 }
 
+/* compact: the studio name stacks under "Aivinci" */
+.stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08em;
+}
+
+.stacked .nameB {
+  font-size: 0.72em;
+  letter-spacing: 0.02em;
+}
+
 .nameA {
   font-weight: 800;
 }

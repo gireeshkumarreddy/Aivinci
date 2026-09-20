@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Button, IconButton } from '../components/ui/Button'
 import { Crosshair, Labels, SectionLabel } from '../components/ui/Editorial'
-import { ArrowRight, Facebook, Instagram, Plus, Threads, YouTube } from '../components/ui/Icons'
+import { ArrowRight, Plus } from '../components/ui/Icons'
 import { Handwriting, handwritingBeat } from '../components/ui/Handwriting'
 import { brand, contact as c, cta } from '../data/content'
 import { EASE, beat, gsap, isTouchDevice, useReducedMotion, useSectionReveal } from '../lib/motion'
@@ -12,18 +12,38 @@ import { asset } from '../lib/assets'
 const PERSPECTIVE = 1800
 const SCREEN_REST_Z = -40
 
-const SOCIAL_ICON = { youtube: YouTube, instagram: Instagram, threads: Threads, facebook: Facebook } as const
-
 const CROSSES: [number, number][] = [
   [1.6, 2.6], [29.1, 2.6], [70.9, 2.6], [98.4, 2.6], [20.7, 24.6], [49.9, 24.6], [86.3, 24.6],
   [1.6, 55.3], [20.7, 55.3], [29.1, 55.3], [49.9, 55.3], [98.4, 55.3], [20.7, 84.2], [79.2, 99.2], [98.4, 99.2],
 ]
 
-function Field({ label, name, type = 'text', as = 'input', options, required }: { label: string; name: string; type?: string; as?: 'input' | 'select' | 'textarea'; options?: readonly string[]; required?: boolean }) {
+function Field({
+  n,
+  label,
+  name,
+  type = 'text',
+  as = 'input',
+  options,
+  required,
+  hint,
+}: {
+  n: string
+  label: string
+  name: string
+  type?: string
+  as?: 'input' | 'select' | 'textarea'
+  options?: readonly string[]
+  required?: boolean
+  hint?: string
+}) {
   const id = `contact-${name}`
   return (
     <label className={styles.field} htmlFor={id}>
-      <span className={`${styles.fieldLabel} t-mono-sm`}>{label}</span>
+      <span className={`${styles.fieldLabel} t-mono-sm`}>
+        <span className={styles.fieldNum}>{n}</span>
+        {label}
+        {hint && <span className={styles.fieldHint}> — {hint}</span>}
+      </span>
       {as === 'select' ? (
         <select id={id} name={name} className={styles.input} defaultValue="" required={required}>
           <option value="" disabled>
@@ -38,9 +58,38 @@ function Field({ label, name, type = 'text', as = 'input', options, required }: 
       ) : as === 'textarea' ? (
         <textarea id={id} name={name} className={`${styles.input} ${styles.textarea}`} rows={2} required={required} />
       ) : (
-        <input id={id} name={name} type={type} className={styles.input} required={required} autoComplete={name === 'email' ? 'email' : name === 'name' ? 'name' : name === 'company' ? 'organization' : 'off'} />
+        <input
+          id={id}
+          name={name}
+          type={type}
+          className={styles.input}
+          required={required}
+          inputMode={type === 'tel' ? 'tel' : undefined}
+          autoComplete={name === 'email' ? 'email' : name === 'name' ? 'name' : name === 'company' ? 'organization' : name === 'phone' ? 'tel' : 'off'}
+        />
       )}
     </label>
+  )
+}
+
+/** "What do you need?" — pill checkboxes, as in the client's reference */
+function Needs({ n, label, options }: { n: string; label: string; options: readonly string[] }) {
+  return (
+    <fieldset className={styles.needs}>
+      <legend className={`${styles.fieldLabel} t-mono-sm`}>
+        <span className={styles.fieldNum}>{n}</span>
+        {label}
+      </legend>
+      <div className={styles.pills}>
+        {options.map((o) => (
+          <label key={o} className={styles.pill}>
+            <input type="checkbox" name="needs" value={o} className={styles.pillInput} />
+            <span className={styles.pillBox} aria-hidden="true" />
+            <span className={styles.pillText}>{o}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
   )
 }
 
@@ -82,8 +131,6 @@ export function Contact() {
       beat(tl, q('[data-ct="mark"]'), { at: [1300, 1800], dir: 'fade', stagger: 0.02, ease: EASE.soft })
       // Contact content 1500–2050: normal fade / settle — text stays secondary
       beat(tl, q('[data-ct="copy"]'), { at: [1500, 2050], dir: 'fade', stagger: 0.04, ease: EASE.soft })
-      // the studio's channels close the footer: a short rise, one after the other
-      beat(tl, q('[data-ct="social"]'), { at: [1750, 2250], dir: 'bottom', amount: 0.3, stagger: 0.06, ease: EASE.soft })
       const hand = el.querySelector('[data-ct="hand"]')
       if (hand) handwritingBeat(tl, hand, [1600, 2300])
     },
@@ -134,7 +181,9 @@ export function Contact() {
     e.preventDefault()
     const data = new FormData(e.currentTarget)
     // mailto is the only honest transport without a backend: it composes the message in the visitor's mail client
-    const lines = ['name', 'company', 'email', 'projectType', 'message', 'budget'].map((k) => `${k}: ${String(data.get(k) ?? '')}`)
+    const lines = ['name', 'company', 'email', 'phone', 'budget'].map((k) => `${k}: ${String(data.get(k) ?? '')}`)
+    lines.push(`needs: ${data.getAll('needs').map(String).join(', ')}`)
+    lines.push(`message: ${String(data.get('message') ?? '')}`)
     const href = `mailto:${brand.email}?subject=${encodeURIComponent('Start a project — ' + String(data.get('name') ?? ''))}&body=${encodeURIComponent(lines.join('\n'))}`
     window.location.href = href
     setSent('ok')
@@ -202,15 +251,16 @@ export function Contact() {
             </p>
             <form className={styles.form} onSubmit={onSubmit} data-ct="copy" aria-label="Start the conversation">
               <div className={styles.row2}>
-                <Field label={c.form.name} name="name" required />
-                <Field label={c.form.company} name="company" />
+                <Field n="01" label={c.form.name} name="name" required />
+                <Field n="02" label={c.form.company} name="company" />
               </div>
               <div className={styles.row2}>
-                <Field label={c.form.email} name="email" type="email" required />
-                <Field label={c.form.projectType} name="projectType" as="select" options={c.form.projectTypes} />
+                <Field n="03" label={c.form.email} name="email" type="email" required />
+                <Field n="04" label={c.form.phone} name="phone" type="tel" hint={c.form.optional} />
               </div>
-              <Field label={c.form.message} name="message" as="textarea" required />
-              <Field label={c.form.budget} name="budget" />
+              <Field n="05" label={c.form.budget} name="budget" as="select" options={c.form.budgets} hint={c.form.budgetHint} />
+              <Needs n="06" label={c.form.needs} options={c.form.needOptions} />
+              <Field n="07" label={c.form.message} name="message" as="textarea" required />
               <div className={styles.formFoot}>
                 <Button type="submit" variant="inverse" size="lg" icon={<ArrowRight size={16} />}>
                   {cta.startConversation}
@@ -232,28 +282,6 @@ export function Contact() {
             <Labels lines={c.together} rule={false} />
           </div>
 
-          {/* ---- footer row --------------------------------------------- */}
-          <div className={`${styles.foot} t-label`} data-ct="copy">
-            <span className={styles.footLeft}>
-              {c.footer.left[0]}
-              <br />
-              {c.footer.left[1]}
-            </span>
-            <span className={styles.footLine} aria-hidden="true" />
-            <span className={styles.footCenter}>{c.footer.center.join('   /   ')}</span>
-            <span className={styles.footLine} aria-hidden="true" />
-            <span className={styles.footRight}>{c.footer.right.join('  ·  ')}</span>
-            <nav className={styles.social} aria-label={`${brand.name} on social media`}>
-              {brand.social.map((s) => {
-                const Icon = SOCIAL_ICON[s.id]
-                return (
-                  <a key={s.id} className={styles.socialLink} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={`${brand.name} on ${s.label}`} title={s.label} data-ct="social">
-                    <Icon size={16} />
-                  </a>
-                )
-              })}
-            </nav>
-          </div>
         </div>
       </div>
     </section>

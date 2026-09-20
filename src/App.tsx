@@ -11,6 +11,7 @@ import { WorkMedia } from './sections/WorkMedia'
 import { Products } from './sections/Products'
 import { ProductSystem } from './sections/ProductSystem'
 import { Contact } from './sections/Contact'
+import { Footer } from './sections/Footer'
 
 export default function App() {
   const [locked, setLocked] = useState(false)
@@ -38,6 +39,7 @@ export default function App() {
         <Products />
         <ProductSystem />
         <Contact />
+        <Footer />
       </main>
     </>
   )

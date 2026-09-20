@@ -116,22 +116,28 @@
 /* ---- paper ---------------------------------------------------------------- */
 .paper {
   position: relative;
-  padding: 3.2cqw 4.3% 4cqw;
+  padding: 3.4cqw 4.3% 3.6cqw;
 }
 
+/* one editorial row: label column · meta · statement · message — then a strip of the four words */
 .paperGrid {
   display: grid;
-  grid-template-columns: 16% 1fr 1fr 18%;
+  grid-template-columns: 16% 1fr 1.25fr 18%;
   grid-template-rows: auto auto;
   column-gap: 2.2cqw;
-  row-gap: 2.6cqw;
+  row-gap: 3cqw;
   align-items: start;
+}
+
+.ideas {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: max(9px, 0.74cqw);
 }
 
 .meta {
   grid-column: 2;
   grid-row: 1;
-  align-self: start;
 }
 
 .metaText {
@@ -161,55 +167,28 @@
   margin-top: 1.2cqw;
 }
 
-.ideas {
-  grid-column: 1;
+.strip {
+  grid-column: 2 / 4;
   grid-row: 2;
-  align-self: end;
-  font-size: max(9px, 0.74cqw);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.4cqw;
+  padding-top: 1.4cqw;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  margin: 0;
+  color: var(--ink);
 }
 
-.cardA {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-.cardB {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.cardBInner {
-  position: relative;
-  aspect-ratio: 492 / 190;
-  border-radius: 4px;
-  background: #0e0e0f;
-  color: var(--white);
-  overflow: hidden;
+.stripItem {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.8cqw;
+  font-size: max(10px, 0.8cqw);
 }
 
-.cardBText {
-  position: relative;
-  z-index: 1;
-  padding: 0 0 0 1.6cqw;
-  font-size: max(9px, 0.74cqw);
-}
-
-.cardBText :global(.rule) {
-  margin-top: 0.9cqw;
-}
-
-.lens {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 52%;
-  object-fit: cover;
-  object-position: 60% 50%;
-  mask-image: linear-gradient(90deg, transparent, #000 35%);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%);
+.stripNum {
+  color: var(--ink-faint);
 }
 
 .cue {
@@ -244,7 +223,7 @@
     left: auto;
     top: auto;
     width: auto;
-    padding: calc(var(--header-h) + 24px) var(--gutter) 0;
+    padding: 30px var(--gutter) 0;
   }
 
   .label {
@@ -283,14 +262,14 @@
   }
 
   .paper {
-    padding: 40px var(--gutter) 48px;
+    padding: 36px var(--gutter) 40px;
   }
 
   .paperGrid {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 26px;
+    gap: 22px;
   }
 
   .statement {
@@ -316,35 +295,27 @@
     font-size: 12px;
   }
 
-  .cardA {
+  .strip {
     order: 4;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    padding-top: 18px;
   }
 
-  .cardB {
-    order: 5;
-  }
-
-  .cardBInner {
-    aspect-ratio: 16 / 8;
-  }
-
-  .cardBText {
-    padding-left: 20px;
-    font-size: 11px;
-  }
-
-  .cardBText :global(.rule) {
-    margin-top: 12px;
+  .stripItem {
+    gap: 10px;
+    font-size: 12px;
   }
 
   .ideas {
-    order: 6;
+    order: 5;
     font-size: 11px;
   }
 
   .cue {
-    order: 7;
+    order: 6;
     align-self: flex-end;
+    margin-top: -34px;
   }
 }
 
@@ -352,28 +323,41 @@
   .paperGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 28px 24px;
+    grid-template-rows: auto auto auto;
+    gap: 26px 28px;
   }
 
   .statement {
     grid-column: 1 / -1;
+    grid-row: 1;
   }
 
-  .message,
+  .message {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
   .meta {
-    grid-column: auto;
+    grid-column: 2;
+    grid-row: 2;
   }
 
-  .cardA,
-  .cardB {
-    grid-column: auto;
+  .strip {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .ideas {
+    grid-column: 1;
+    grid-row: 4;
     align-self: end;
   }
 
   .cue {
+    grid-column: 2;
+    grid-row: 4;
     justify-self: end;
+    margin-top: 0;
   }
 }
