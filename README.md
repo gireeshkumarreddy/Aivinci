@@ -101,8 +101,9 @@ The site is a static single-page build: `npm run build` → `dist/` (no server, 
 - **Netlify / Vercel / Cloudflare Pages / Render**: connect the repository; the build command is
   `npm run build`, the publish directory `dist`, Node 22 (`netlify.toml`, `vercel.json`, `.nvmrc` are
   included; `public/_headers` gives long-lived caching for assets, video and fonts).
-- **Plain static hosting (cPanel / FTP)**: run `npm run build` locally and upload the *contents* of
-  `dist/` to the web root (a `.htaccess` with the right MIME types and caching ships inside it).
+- **Plain static hosting (Hostinger / cPanel / FTP)**: `npm run build:static` builds with relative
+  asset paths (`./assets/…`), so the *contents* of `dist/` can be uploaded to `public_html` (or any
+  sub-folder) as-is — a `.htaccess` with the right MIME types and caching ships inside it.
 - **Sub-path hosting** (e.g. GitHub Pages at `/Aivinci/`): build with `VITE_BASE=/Aivinci/ npm run build`
   (or `vite build --base=/Aivinci/`) — every asset URL honours the base.
 

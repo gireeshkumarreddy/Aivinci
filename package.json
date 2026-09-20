@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "assets": "python tools/build_assets.py",
-    "qa": "node tools/qa.mjs audit 390 844 && node tools/qa.mjs audit 1440 900"
+    "qa": "node tools/qa.mjs audit 390 844 && node tools/qa.mjs audit 1440 900",
+    "build:static": "tsc -b && vite build --base=./"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
