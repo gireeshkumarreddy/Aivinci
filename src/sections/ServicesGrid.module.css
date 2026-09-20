@@ -1,0 +1,337 @@
+/* ==================================================================
+   04 / SERVICES — service grid (8 dimensional cards)
+   ================================================================== */
+.section {
+  position: relative;
+  background: var(--paper-2);
+  color: var(--ink);
+  padding: clamp(40px, 3.6vw, 60px) var(--gutter) clamp(56px, 4.5vw, 80px);
+}
+
+/* ---- top row ---------------------------------------------------------- */
+.top {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr;
+  align-items: start;
+  gap: 24px;
+  padding-bottom: clamp(22px, 2vw, 32px);
+}
+
+.topLeft {
+  font-size: 11.5px;
+}
+
+.topCenter {
+  font-size: clamp(13px, 1.02vw, 15.5px);
+  line-height: 1.45;
+  max-width: 24em;
+  justify-self: start;
+}
+
+.topRight {
+  text-align: right;
+  color: var(--ink-faint);
+  font-size: 11.5px;
+}
+
+/* ---- grid ------------------------------------------------------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+}
+
+.card {
+  position: relative;
+  padding: clamp(18px, 1.6vw, 26px) clamp(16px, 1.4vw, 24px) clamp(24px, 2vw, 32px) 0;
+  border-left: 1px solid var(--line);
+  will-change: transform, opacity;
+}
+
+.card:nth-child(4n + 1) {
+  border-left: 0;
+}
+
+.card:nth-child(n + 5) {
+  border-top: 1px solid var(--line);
+}
+
+.card:not(:nth-child(4n + 1)) {
+  padding-left: clamp(16px, 1.4vw, 24px);
+}
+
+.head {
+  min-height: clamp(150px, 11vw, 170px);
+  display: flex;
+  flex-direction: column;
+}
+
+.num {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.numRule {
+  width: 38px;
+  height: 1px;
+  background: var(--ink);
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(14px, 1.3vw, 22px);
+  font-size: clamp(22px, 1.9vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.desc {
+  margin-top: clamp(10px, 0.9vw, 14px);
+  font-size: clamp(13px, 1.02vw, 15.5px);
+  line-height: 1.35;
+  max-width: 16em;
+}
+
+/* ---- media: a real object with depth ------------------------------------ */
+.media {
+  position: relative;
+  margin-top: auto;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.slot {
+  box-shadow: 0 28px 40px -30px rgba(0, 0, 0, 0.55);
+}
+
+.caption {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  color: var(--white);
+  font-size: 11px;
+  transform: translateZ(28px);
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+.arrow {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  transform: translateZ(44px);
+}
+
+/* ---- outro ------------------------------------------------------------- */
+.outro {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto auto auto;
+  align-items: center;
+  gap: clamp(20px, 2.4vw, 44px);
+  padding-top: clamp(34px, 3.2vw, 52px);
+}
+
+.outroHead {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(34px, 3.6vw, 60px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.outroMuted {
+  color: var(--ink-mid);
+}
+
+.outroBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-size: clamp(13px, 1.02vw, 15.5px);
+  line-height: 1.45;
+  justify-self: start;
+}
+
+.outroBody :global(button) {
+  align-self: flex-start;
+}
+
+.vr {
+  height: clamp(60px, 6vw, 90px);
+  align-self: center;
+}
+
+.arch {
+  width: clamp(64px, 5.6vw, 92px);
+  aspect-ratio: 92 / 90;
+  border-radius: 999px 999px 8px 8px;
+  overflow: hidden;
+  background: #111;
+}
+
+.arch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hand {
+  color: var(--ink);
+}
+
+.outroLabels {
+  font-size: 11.5px;
+}
+
+/* ==================================================================
+   Responsive
+   ================================================================== */
+@media (max-width: 1180px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card:nth-child(4n + 1) {
+    border-left: 1px solid var(--line);
+  }
+
+  .card:nth-child(2n + 1) {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .card:not(:nth-child(2n + 1)) {
+    padding-left: clamp(16px, 2vw, 24px);
+  }
+
+  .card:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+
+  .head {
+    min-height: 0;
+    margin-bottom: 18px;
+  }
+
+  .outro {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    row-gap: 32px;
+  }
+
+  .outroHead {
+    grid-column: 1;
+  }
+
+  .outroBody {
+    grid-column: 2;
+  }
+
+  .vr {
+    display: none;
+  }
+
+  .arch {
+    grid-column: 1;
+  }
+
+  .hand {
+    grid-column: 2;
+  }
+
+  .outroLabels {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .top {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .topRight {
+    text-align: left;
+  }
+
+  .topCenter {
+    font-size: 15px;
+    max-width: 34em;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    border-left: 0 !important;
+    padding-left: 0 !important;
+    padding-top: 22px;
+    padding-bottom: 28px;
+  }
+
+  .card:nth-child(n + 2) {
+    border-top: 1px solid var(--line);
+  }
+
+  .card:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+
+  .title {
+    font-size: clamp(26px, 7.4vw, 34px);
+  }
+
+  .desc {
+    font-size: 15px;
+    max-width: 24em;
+  }
+
+  .slot {
+    aspect-ratio: 16 / 9 !important;
+  }
+
+  .caption {
+    font-size: 11.5px;
+    left: 16px;
+    bottom: 14px;
+  }
+
+  .outro {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+    padding-top: 36px;
+  }
+
+  .outroHead,
+  .outroBody,
+  .arch,
+  .hand,
+  .outroLabels {
+    grid-column: 1;
+  }
+
+  .outroHead {
+    font-size: clamp(36px, 11vw, 52px);
+  }
+
+  .outroBody {
+    font-size: 15px;
+  }
+
+  .outroLabels {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+  }
+}

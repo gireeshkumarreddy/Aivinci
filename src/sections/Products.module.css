@@ -1,0 +1,464 @@
+/* ==================================================================
+   08 / PRODUCTS — Built by Aivinci (phone + hand)
+   ================================================================== */
+.section {
+  position: relative;
+  background: #050608;
+  color: var(--white);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  background: #050608;
+}
+
+.stage {
+  position: relative;
+  min-height: calc(100cqw * 941 / 1672);
+  z-index: 1;
+}
+
+/* ---- left ------------------------------------------------------------------ */
+.left {
+  position: relative;
+  margin-left: 3.6%;
+  padding: 4cqw 0 3cqw;
+  width: 27%;
+  z-index: 3;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.3cqw;
+  font-size: 3.7cqw;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+}
+
+.description {
+  margin-top: 1.3cqw;
+  max-width: 22cqw;
+  font-size: max(11px, 0.9cqw);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.table {
+  margin-top: 2.2cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.productRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1cqw;
+  padding-bottom: 0.7cqw;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.productName {
+  font-size: max(14px, 1.25cqw);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.productCat {
+  color: rgba(255, 255, 255, 0.6);
+  text-align: right;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2.4cqw 1fr auto;
+  align-items: center;
+  gap: 0.6cqw;
+  padding: 0.75cqw 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: max(12px, 0.95cqw);
+  will-change: transform, opacity;
+}
+
+.rowNum {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.rowArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5cqw;
+  height: 1.5cqw;
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.productDesc {
+  margin-top: 1.1cqw;
+  font-size: max(10px, 0.78cqw);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.table > div:last-child {
+  margin-top: 1.2cqw;
+}
+
+/* ---- centre ---------------------------------------------------------------- */
+.hand {
+  position: absolute;
+  left: 33.6%;
+  bottom: 0;
+  width: 36.4%;
+  z-index: 2;
+  will-change: transform;
+}
+
+/* ---- right ----------------------------------------------------------------- */
+.callout {
+  position: absolute;
+  left: 64.6%;
+  top: 46%;
+  z-index: 3;
+  font-size: max(9px, 0.74cqw);
+  will-change: transform, opacity;
+}
+
+.connector {
+  position: absolute;
+  left: 61.4%;
+  top: 46.6%;
+  width: 4.2cqw;
+  height: 11.4cqw;
+  z-index: 3;
+  overflow: visible;
+}
+
+.shots {
+  position: absolute;
+  left: 74.3%;
+  top: 49%;
+  width: 20.9%;
+  z-index: 3;
+}
+
+.shotIndex {
+  display: block;
+  text-align: right;
+  margin-bottom: 0.5cqw;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.stack {
+  position: relative;
+  aspect-ratio: 349 / 230;
+}
+
+.shot {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  will-change: transform, opacity;
+}
+
+.section[data-revealed] .shot {
+  transition: transform 0.6s var(--ease-cine), opacity 0.4s ease, filter 0.5s ease;
+}
+
+.shotFront {
+  z-index: 2;
+  transform: translate(0, 0) scale(1);
+}
+
+.shotBack {
+  z-index: 1;
+  transform: translate(2.2%, -6%) scale(0.96);
+  opacity: 0.55;
+  filter: brightness(0.6);
+  pointer-events: none;
+}
+
+.shotCap {
+  position: absolute;
+  left: 1.1cqw;
+  bottom: 1cqw;
+  font-size: max(9px, 0.74cqw);
+  z-index: 3;
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+.shotStatement {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.statement {
+  height: 100%;
+  padding: 1.4cqw 1.6cqw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.8cqw;
+  background: linear-gradient(160deg, #182a48 0%, #0b1120 60%, #070b14 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.statementCat {
+  color: rgba(157, 190, 255, 0.85);
+}
+
+.statementText {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.7cqw;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.shotNav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6cqw;
+  margin-top: 0.9cqw;
+  color: var(--white);
+}
+
+.shotSlash {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.handwriting {
+  position: absolute;
+  right: 3.6%;
+  top: 86%;
+  z-index: 3;
+  color: var(--white);
+}
+
+.cue {
+  position: relative;
+  margin: 2.2cqw 0 0 3.6%;
+  padding-bottom: 3cqw;
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  z-index: 3;
+}
+
+.cueLine {
+  width: 1px;
+  height: 3cqw;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.mobileExplore {
+  display: none;
+}
+
+/* ==================================================================
+   Tablet / mobile
+   ================================================================== */
+@media (max-width: 1023px) {
+  .stage {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: calc(var(--header-h) + 22px) 0 44px;
+  }
+
+  .left,
+  .hand,
+  .callout,
+  .connector,
+  .shots,
+  .handwriting,
+  .cue {
+    position: static;
+    width: auto;
+  }
+
+  .left {
+    margin-left: 0;
+    padding: 0 var(--gutter);
+  }
+
+  .heading {
+    margin-top: 16px;
+    font-size: clamp(38px, 11vw, 64px);
+  }
+
+  .description {
+    margin-top: 16px;
+    max-width: 30em;
+    font-size: 15px;
+  }
+
+  .table {
+    order: 3;
+    margin: 28px var(--gutter) 0;
+  }
+
+  .productName {
+    font-size: 18px;
+  }
+
+  .row {
+    grid-template-columns: 30px 1fr auto;
+    padding: 12px 0;
+    font-size: 15px;
+  }
+
+  .rowArrow {
+    width: 26px;
+    height: 26px;
+  }
+
+  .productDesc {
+    margin-top: 16px;
+    font-size: 14px;
+  }
+
+  .table > div:last-child {
+    margin-top: 18px;
+  }
+
+  /* the hand rises into a contained visual; never fills the whole viewport */
+  .hand {
+    order: 2;
+    width: min(86vw, 420px);
+    margin: 22px auto 0;
+    max-height: min(94vw, 460px);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
+  }
+
+  .callout {
+    order: 4;
+    margin: 30px var(--gutter) 0;
+    font-size: 11px;
+  }
+
+  .connector {
+    display: none;
+  }
+
+  .shots {
+    order: 5;
+    margin: 16px var(--gutter) 0;
+  }
+
+  .stack {
+    aspect-ratio: 16 / 10;
+  }
+
+  .shotCap {
+    left: 16px;
+    bottom: 14px;
+    font-size: 11px;
+  }
+
+  .statement {
+    padding: 22px;
+    gap: 12px;
+  }
+
+  .statementText {
+    font-size: clamp(24px, 6.4vw, 32px);
+  }
+
+  .shotNav {
+    margin-top: 12px;
+    gap: 8px;
+  }
+
+  .handwriting {
+    order: 6;
+    margin: 30px var(--gutter) 0;
+    align-self: flex-end;
+  }
+
+  .cue {
+    order: 7;
+    margin: 26px var(--gutter) 0;
+    padding-bottom: 0;
+    gap: 16px;
+  }
+
+  .cueLine {
+    height: 36px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .table {
+    order: 3;
+  }
+
+  .left {
+    order: 1;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .stage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    column-gap: 24px;
+    align-items: start;
+  }
+
+  .left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .hand {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 40px;
+    width: 100%;
+    max-width: 420px;
+    max-height: none;
+    justify-self: end;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .table {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .callout,
+  .shots,
+  .handwriting,
+  .cue {
+    grid-column: 1 / -1;
+  }
+
+  .shots {
+    max-width: 520px;
+  }
+}

@@ -1,0 +1,170 @@
+.btn {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--white);
+  --btn-bd: transparent;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 1px solid var(--btn-bd);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition:
+    transform 0.35s var(--ease-out),
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.35s var(--ease-out);
+  will-change: transform;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.solid {
+  box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.55);
+}
+
+.solid:hover {
+  background: var(--ink-2);
+  box-shadow: 0 16px 30px -16px rgba(0, 0, 0, 0.6);
+}
+
+.inverse {
+  --btn-bg: var(--white);
+  --btn-fg: var(--ink);
+}
+
+.inverse:hover {
+  background: #f0f0f0;
+}
+
+.outline {
+  --btn-bg: transparent;
+  --btn-fg: currentColor;
+  --btn-bd: currentColor;
+}
+
+.ghost {
+  --btn-bg: rgba(255, 255, 255, 0.06);
+  --btn-fg: var(--white);
+  --btn-bd: var(--night-line);
+  backdrop-filter: blur(10px);
+}
+
+.ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.text {
+  --btn-bg: transparent;
+  --btn-fg: currentColor;
+  padding-inline: 0 !important;
+  height: auto !important;
+}
+
+.text:hover {
+  transform: none;
+}
+
+.text .icon {
+  transition: transform 0.35s var(--ease-out);
+}
+
+.text:hover .icon {
+  transform: translateY(3px);
+}
+
+.sm {
+  height: 38px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+.md {
+  height: 46px;
+  padding: 0 22px;
+  font-size: 14.5px;
+}
+
+.lg {
+  height: 52px;
+  padding: 0 26px;
+  font-size: 15px;
+}
+
+.icon,
+.iconLeft {
+  display: inline-flex;
+  line-height: 0;
+}
+
+.btn:not(.text):hover .icon svg {
+  transform: translate(1px, -1px);
+}
+
+.icon svg {
+  transition: transform 0.35s var(--ease-out);
+}
+
+/* ---- circular icon buttons -------------------------------------- */
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition:
+    transform 0.35s var(--ease-out),
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+  flex: none;
+}
+
+.iconBtn:hover {
+  transform: scale(1.06);
+}
+
+.iconBtn:active {
+  transform: scale(0.96);
+}
+
+.tone-dark {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.tone-light {
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.35);
+}
+
+.tone-outline {
+  background: transparent;
+  color: currentColor;
+  border-color: currentColor;
+}
+
+.tone-glass {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.tone-glass:hover {
+  background: rgba(255, 255, 255, 0.26);
+}

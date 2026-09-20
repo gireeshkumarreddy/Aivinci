@@ -1,0 +1,66 @@
+.hand {
+  display: inline-block;
+  color: currentColor;
+  transform-origin: 0 100%;
+}
+
+.line {
+  --p: 108%;
+  position: relative;
+  display: block;
+  white-space: nowrap;
+  padding-right: 0.15em;
+}
+
+.ink {
+  display: inline-block;
+  /* room for Caveat's ascenders/descenders inside the mask box */
+  padding: 0.32em 0.3em 0.32em 0.12em;
+  margin: -0.32em -0.3em -0.32em -0.12em;
+  /* soft-edged reveal that travels with the writing */
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--p) - 5%), transparent var(--p));
+  mask-image: linear-gradient(90deg, #000 calc(var(--p) - 5%), transparent var(--p));
+}
+
+.pen {
+  position: absolute;
+  top: 58%;
+  left: clamp(0%, calc(var(--p) - 4%), 100%);
+  width: 0.14em;
+  height: 0.14em;
+  margin-left: -0.07em;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease;
+}
+
+/* the pen is visible only while a line is being written (GSAP drives --p inline) */
+.line[style*='--p'] .pen {
+  opacity: 0.9;
+}
+
+.line[style*='--p: 108%'] .pen,
+.line[style*='--p:108%'] .pen,
+.line[style*='--p: -6%'] .pen,
+.line[style*='--p:-6%'] .pen {
+  opacity: 0;
+}
+
+.underline {
+  display: block;
+  width: 3.4em;
+  height: auto;
+  margin-top: 0.05em;
+  margin-left: 0.6em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.underline path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}

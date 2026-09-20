@@ -1,0 +1,379 @@
+/* ==================================================================
+   03 / SERVICES — cinematic environment + giant typography
+   ================================================================== */
+.section {
+  position: relative;
+  background: var(--paper-warm);
+  color: var(--ink);
+  container-type: inline-size;
+}
+
+/* ---- environment band ------------------------------------------------ */
+.env {
+  position: relative;
+  aspect-ratio: 1536 / 520;
+  background: #0b0b0c;
+  color: var(--white);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 35%;
+  transform-origin: 50% 60%;
+  will-change: transform, filter, opacity;
+}
+
+.envShade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.15) 32%, rgba(0, 0, 0, 0) 55%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.45) 100%);
+  pointer-events: none;
+}
+
+.headlineBlock {
+  position: absolute;
+  left: 4.3%;
+  top: 15.5%;
+  width: 30cqw;
+  z-index: 2;
+}
+
+.label {
+  margin-bottom: 1.1cqw;
+  opacity: 0.7;
+}
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  font-size: 2.95cqw;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.support {
+  margin-top: 1.2cqw;
+  max-width: 21cqw;
+  font-size: max(11px, 0.9cqw);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.sideLabels {
+  position: absolute;
+  right: 3.2%;
+  top: 22%;
+  bottom: 27%;
+  padding-left: 1.2cqw;
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+  font-size: max(9px, 0.74cqw);
+}
+
+.sideA,
+.sideB {
+  font-size: inherit;
+}
+
+/* giant word: clipped at the band's bottom edge so it can rise out of it */
+.giantClip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 23%;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.giant {
+  display: block;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.giant text {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  font-size: 176px;
+  letter-spacing: -0.02em;
+  fill: #fbfbfb;
+}
+
+/* ---- paper ---------------------------------------------------------------- */
+.paper {
+  position: relative;
+  padding: 3.2cqw 4.3% 4cqw;
+}
+
+.paperGrid {
+  display: grid;
+  grid-template-columns: 16% 1fr 1fr 18%;
+  grid-template-rows: auto auto;
+  column-gap: 2.2cqw;
+  row-gap: 2.6cqw;
+  align-items: start;
+}
+
+.meta {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+}
+
+.metaText {
+  font-size: max(10px, 0.78cqw);
+  line-height: 1.4;
+}
+
+.statement {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 2.25cqw;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+}
+
+.message {
+  grid-column: 4;
+  grid-row: 1;
+  font-size: max(10.5px, 0.82cqw);
+  line-height: 1.45;
+}
+
+.message .rule {
+  margin-top: 1.2cqw;
+}
+
+.ideas {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  font-size: max(9px, 0.74cqw);
+}
+
+.cardA {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.cardB {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.cardBInner {
+  position: relative;
+  aspect-ratio: 492 / 190;
+  border-radius: 4px;
+  background: #0e0e0f;
+  color: var(--white);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.cardBText {
+  position: relative;
+  z-index: 1;
+  padding: 0 0 0 1.6cqw;
+  font-size: max(9px, 0.74cqw);
+}
+
+.cardBText :global(.rule) {
+  margin-top: 0.9cqw;
+}
+
+.lens {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 52%;
+  object-fit: cover;
+  object-position: 60% 50%;
+  mask-image: linear-gradient(90deg, transparent, #000 35%);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%);
+}
+
+.cue {
+  grid-column: 4;
+  grid-row: 2;
+  align-self: end;
+  justify-self: end;
+}
+
+/* ==================================================================
+   Tablet / mobile — deliberate vertical recomposition
+   ================================================================== */
+@media (max-width: 1023px) {
+  .env {
+    aspect-ratio: auto;
+    min-height: clamp(560px, 130vw, 760px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .image {
+    object-position: 58% 30%;
+  }
+
+  .envShade {
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.1) 30%, rgba(0, 0, 0, 0.2) 55%, rgba(0, 0, 0, 0.75) 100%);
+  }
+
+  .headlineBlock {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+    padding: calc(var(--header-h) + 24px) var(--gutter) 0;
+  }
+
+  .label {
+    margin-bottom: 12px;
+  }
+
+  .headline {
+    font-size: clamp(36px, 10.2vw, 64px);
+  }
+
+  .support {
+    margin-top: 18px;
+    max-width: 30em;
+    font-size: 15px;
+  }
+
+  .sideLabels {
+    position: relative;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    margin: 26px var(--gutter) 0;
+    padding-left: 14px;
+    flex-direction: row;
+    gap: 32px;
+    justify-content: flex-start;
+    font-size: 11px;
+    border-left-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .giantClip {
+    position: relative;
+    margin-top: auto;
+    height: auto;
+    aspect-ratio: 1536 / 132;
+  }
+
+  .paper {
+    padding: 40px var(--gutter) 48px;
+  }
+
+  .paperGrid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 26px;
+  }
+
+  .statement {
+    font-size: clamp(26px, 7.4vw, 44px);
+    order: 1;
+  }
+
+  .message {
+    order: 2;
+    font-size: 15px;
+    max-width: 34em;
+  }
+
+  .message .rule {
+    margin-top: 16px;
+  }
+
+  .meta {
+    order: 3;
+  }
+
+  .metaText {
+    font-size: 12px;
+  }
+
+  .cardA {
+    order: 4;
+  }
+
+  .cardB {
+    order: 5;
+  }
+
+  .cardBInner {
+    aspect-ratio: 16 / 8;
+  }
+
+  .cardBText {
+    padding-left: 20px;
+    font-size: 11px;
+  }
+
+  .cardBText :global(.rule) {
+    margin-top: 12px;
+  }
+
+  .ideas {
+    order: 6;
+    font-size: 11px;
+  }
+
+  .cue {
+    order: 7;
+    align-self: flex-end;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .paperGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 24px;
+  }
+
+  .statement {
+    grid-column: 1 / -1;
+  }
+
+  .message,
+  .meta {
+    grid-column: auto;
+  }
+
+  .cardA,
+  .cardB {
+    grid-column: auto;
+  }
+
+  .ideas {
+    align-self: end;
+  }
+
+  .cue {
+    justify-self: end;
+  }
+}

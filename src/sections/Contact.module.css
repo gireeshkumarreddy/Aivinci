@@ -1,0 +1,521 @@
+/* ==================================================================
+   10 / CONTACT / REALITY — cinematic 3D installation
+   ================================================================== */
+.section {
+  position: relative;
+  background: #030303;
+  color: var(--white);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.scene {
+  position: relative;
+  perspective: 1800px;
+  perspective-origin: 50% 45%;
+}
+
+.stage {
+  position: relative;
+  min-height: calc(100cqw * 941 / 1672);
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+/* ---- the screen (a physical plane in depth) ------------------------------ */
+.installation {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.screenWrap {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform, filter, opacity;
+  transform-origin: 50% 50%;
+}
+
+.screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.screenGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(55% 60% at 32% 45%, rgba(210, 222, 236, 0.16), rgba(210, 222, 236, 0) 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.people {
+  position: absolute;
+  left: 37.9%;
+  top: 49.2%;
+  width: 62.1%;
+  height: 50.8%;
+  will-change: transform, filter, opacity;
+  z-index: 2;
+}
+
+.people picture {
+  display: block;
+  height: 100%;
+}
+
+.people img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(90% 90% at 50% 50%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.55) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 26%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.cross {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  opacity: 0.55;
+}
+
+/* ---- editorial layer ---------------------------------------------------- */
+.labelsLeft,
+.labelsTopA,
+.labelsTopB {
+  position: absolute;
+  z-index: 5;
+  font-size: max(9px, 0.74cqw);
+}
+
+.labelsLeft {
+  left: 2.9%;
+  top: 14.3%;
+}
+
+.labelsTopA {
+  left: 77%;
+  top: 14.3%;
+}
+
+.labelsTopB {
+  left: 93.3%;
+  top: 14.3%;
+}
+
+.hand {
+  position: absolute;
+  left: 50%;
+  top: 12.5%;
+  transform: translateX(-50%);
+  z-index: 5;
+  color: var(--white);
+}
+
+.reality {
+  position: absolute;
+  left: 37.3%;
+  top: 47.2%;
+  z-index: 5;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 2cqw;
+  letter-spacing: 1.15em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+  will-change: letter-spacing, opacity, filter;
+}
+
+.beyond {
+  position: absolute;
+  left: 66.8%;
+  top: 47.6%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9cqw;
+  z-index: 5;
+  font-size: max(9px, 0.74cqw);
+  white-space: nowrap;
+}
+
+.beyondLine {
+  width: 3cqw;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* ---- contact -------------------------------------------------------------- */
+.contact {
+  position: relative;
+  margin: 15.2cqw 3.6% 6.4cqw 77%;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.1cqw;
+  font-size: 2.45cqw;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.description {
+  margin-top: 1.2cqw;
+  font-size: max(10px, 0.82cqw);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 26em;
+}
+
+.form {
+  margin-top: 1.1cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25cqw;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35cqw 1cqw;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15cqw;
+  padding: 0.35cqw 0 0.25cqw;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  transition: border-color 0.3s ease;
+}
+
+.field:focus-within {
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.fieldLabel {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: var(--white);
+  font-size: max(12px, 0.9cqw);
+  line-height: 1.5;
+  padding: 0.1cqw 0;
+  outline: none;
+  min-width: 0;
+}
+
+.input option {
+  color: var(--ink);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 2em;
+  max-height: 8em;
+}
+
+.formFoot {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  margin-top: 0.9cqw;
+  flex-wrap: wrap;
+}
+
+.email {
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.email:hover {
+  color: var(--white);
+}
+
+.sent {
+  min-height: 0;
+  margin-top: 0.3cqw;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: none;
+}
+
+.together {
+  position: absolute;
+  left: 2.9%;
+  top: 83%;
+  display: flex;
+  align-items: center;
+  gap: 1.1cqw;
+  z-index: 6;
+  font-size: max(9px, 0.74cqw);
+}
+
+/* ---- foot --------------------------------------------------------------- */
+.foot {
+  position: absolute;
+  left: 2.9%;
+  right: 3.6%;
+  bottom: 2.6%;
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  font-size: max(9px, 0.72cqw);
+  z-index: 6;
+}
+
+.footLine {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.footCenter,
+.footRight {
+  white-space: pre;
+}
+
+/* the studio's channels — the last element of the footer row */
+.social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6cqw;
+  margin-left: 1.4cqw;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max(34px, 2.4cqw);
+  height: max(34px, 2.4cqw);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--white);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.35s var(--ease-out);
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--ink);
+  transform: scale(1.06);
+}
+
+.socialLink:active {
+  transform: scale(0.96);
+}
+
+/* ==================================================================
+   Tablet / mobile — installation on top, conversation below
+   ================================================================== */
+@media (max-width: 1023px) {
+  .stage {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .installation {
+    position: relative;
+    inset: auto;
+    aspect-ratio: 4 / 5;
+    max-height: 640px;
+    overflow: hidden;
+  }
+
+  .screenWrap {
+    position: absolute;
+    inset: 0;
+  }
+
+  .screen img {
+    object-position: 60% 50%;
+  }
+
+  .people {
+    left: 22%;
+    top: auto;
+    bottom: 0;
+    width: 90%;
+    height: 36%;
+  }
+
+  .people img {
+    object-fit: cover;
+    object-position: 0% 50%;
+  }
+
+
+  .labelsLeft {
+    left: var(--gutter);
+    top: calc(var(--header-h) + 18px);
+    font-size: 11px;
+  }
+
+  .hand {
+    left: auto;
+    right: var(--gutter);
+    top: calc(var(--header-h) + 14px);
+    transform: none;
+  }
+
+  .labelsTopA,
+  .labelsTopB {
+    display: none;
+  }
+
+  .reality {
+    left: var(--gutter);
+    top: auto;
+    bottom: 42%;
+    font-size: clamp(18px, 5.4vw, 28px);
+    letter-spacing: 0.7em;
+  }
+
+  .beyond {
+    left: var(--gutter);
+    top: auto;
+    bottom: 36%;
+    font-size: 11px;
+    gap: 12px;
+  }
+
+  .beyondLine {
+    width: 30px;
+  }
+
+  .stage {
+    min-height: 0;
+  }
+
+  .contact,
+  .together,
+  .foot {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+  }
+
+  .contact {
+    margin: 0;
+    padding: 34px var(--gutter) 0;
+  }
+
+  .heading {
+    margin-top: 16px;
+    font-size: clamp(34px, 9.6vw, 56px);
+  }
+
+  .description {
+    margin-top: 14px;
+    font-size: 15px;
+  }
+
+  .form {
+    margin-top: 22px;
+    gap: 6px;
+  }
+
+  .row2 {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .field {
+    padding: 10px 0 8px;
+    gap: 4px;
+  }
+
+  .input {
+    font-size: 16px;
+    padding: 2px 0;
+  }
+
+  .formFoot {
+    margin-top: 20px;
+    gap: 16px;
+  }
+
+  .together {
+    margin: 36px var(--gutter) 0;
+    gap: 16px;
+    font-size: 11px;
+  }
+
+  .foot {
+    margin: 32px var(--gutter) 32px;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    font-size: 11px;
+  }
+
+  .footLine {
+    display: none;
+  }
+
+  /* the channels take their own row so they stay visible and tappable */
+  .social {
+    width: 100%;
+    margin: 6px 0 0;
+    gap: 12px;
+  }
+
+  .socialLink {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .screenWrap {
+    aspect-ratio: 16 / 10;
+  }
+
+  .row2 {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 20px;
+  }
+
+  .contact {
+    max-width: 640px;
+  }
+}

@@ -1,0 +1,122 @@
+.slot {
+  position: relative;
+  overflow: hidden;
+  background: #101012;
+  width: 100%;
+  isolation: isolate;
+  /* dimensions are reserved by aspect-ratio (set inline) — no layout shift on load */
+  transform: translateZ(0);
+}
+
+.poster,
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.poster {
+  transition: transform 3.2s var(--ease-out), opacity 0.6s ease;
+  transform-origin: 50% 55%;
+  will-change: transform;
+}
+
+.video {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.playing .video {
+  opacity: 1;
+}
+
+.playing .poster {
+  opacity: 0;
+}
+
+/* desktop hover / tap preview: a slow, controlled drift — never a zoom that breaks the grid */
+@media (hover: hover) {
+  .preview:hover .poster {
+    transform: scale(1.045);
+  }
+}
+
+.previewing .poster {
+  transform: scale(1.045);
+}
+
+.slate {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.07), transparent 60%),
+    linear-gradient(180deg, #1a1a1d, #0f0f11);
+}
+
+.slateGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(70% 70% at 50% 50%, #000 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000 40%, transparent 100%);
+}
+
+.play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--white);
+  background: rgba(20, 20, 22, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  transition: transform 0.35s var(--ease-out), background-color 0.25s ease;
+  z-index: 2;
+}
+
+.play:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  background: rgba(20, 20, 22, 0.65);
+}
+
+.play svg {
+  margin-left: 2px;
+}
+
+.hit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.tag {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  color: rgba(255, 255, 255, 0.78);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.35s ease, transform 0.35s var(--ease-out);
+}
+
+.slot:hover .tag,
+.slot:focus-within .tag,
+.previewing .tag,
+.slot[data-video='placeholder'][data-tag='always'] .tag {
+  opacity: 1;
+  transform: translateY(0);
+}

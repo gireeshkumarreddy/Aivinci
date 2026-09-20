@@ -1,0 +1,88 @@
+.labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+.labels .rule {
+  margin-top: 0.9em;
+}
+
+.muted {
+  opacity: 0.55;
+}
+
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.sectionLine {
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.cross {
+  display: block;
+  color: currentColor;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: currentColor;
+  text-align: left;
+}
+
+.cueLeft {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.cueRing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  transition: transform 0.4s var(--ease-out), background-color 0.25s ease, color 0.25s ease;
+}
+
+.cueRing svg {
+  transition: transform 0.4s var(--ease-out);
+}
+
+.cue:hover .cueRing {
+  background: currentColor;
+}
+
+.cue:hover .cueRing svg {
+  color: var(--paper);
+  transform: translateY(2px);
+}
+
+.cueLight:hover .cueRing svg {
+  color: var(--ink);
+}
+
+.cueText {
+  line-height: 1.25;
+}
+
+.vrule {
+  display: block;
+  width: 1px;
+  align-self: stretch;
+  background: currentColor;
+  opacity: 0.35;
+}

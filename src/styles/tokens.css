@@ -1,0 +1,70 @@
+/* ------------------------------------------------------------------
+   Aivinci Studios — design tokens
+   Values are sampled from the supplied reference art.
+   ------------------------------------------------------------------ */
+:root {
+  /* paper + ink */
+  --paper: #eeeeee;
+  --paper-2: #f4f3f0;
+  --paper-warm: #f3f1ec;
+  --paper-header: rgba(246, 246, 246, 0.82);
+  --ink: #0b0b0b;
+  --ink-2: #1a1a1a;
+  --ink-3: #2b2b2b;
+  --ink-mid: #4a4a4a;
+  --ink-soft: #6f6f6f;
+  --ink-faint: #9a9a9a;
+  --line: rgba(0, 0, 0, 0.14);
+  --line-strong: rgba(0, 0, 0, 0.32);
+
+  /* dark chapters */
+  --night: #0a0a0b;
+  --night-2: #121214;
+  --night-3: #1c1c1e;
+  --night-line: rgba(255, 255, 255, 0.14);
+  --night-line-soft: rgba(255, 255, 255, 0.08);
+  --white: #ffffff;
+  --white-70: rgba(255, 255, 255, 0.7);
+  --white-50: rgba(255, 255, 255, 0.5);
+  --white-35: rgba(255, 255, 255, 0.35);
+
+  /* signal */
+  --green: #2ecc40;
+  --red-deep: #26060a;
+  --red: #7c1913;
+  --red-hot: #b0261c;
+  --blue-ui: #0f1a2e;
+  --blue-ui-2: #1c3358;
+  --blue-glow: #7fb2ff;
+
+  /* product system */
+  --card-blue: #0404e9;
+  --card-violet: #afa1ea;
+  --card-lime: #c0bf34;
+  --card-white: #f4f4f4;
+
+  /* type */
+  --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-brand: 'Manrope', 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-hand: 'Caveat', 'Segoe Script', cursive;
+
+  /* layout */
+  --gutter: clamp(20px, 3.6vw, 56px);
+  --header-h: 88px;
+  --radius-card: 6px;
+  --radius-box: 14px;
+  --radius-pill: 999px;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-cine: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-h: 64px;
+    --gutter: 20px;
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "first-hero-video": {
+    "source": "Video (1) HD.mp4:152608988",
+    "sourceHeight": 2160,
+    "renditions": [
+      "1440",
+      "1080",
+      "720"
+    ]
+  },
+  "video-two": {
+    "source": "Video 2 HD.mp4:157031831",
+    "sourceHeight": 2160,
+    "renditions": [
+      "1440",
+      "1080",
+      "720"
+    ]
+  },
+  "video-three": {
+    "source": "video 3 hd.mp4:96448570",
+    "sourceHeight": 2160,
+    "renditions": [
+      "1440",
+      "1080",
+      "720"
+    ]
+  },
+  "last-video": {
+    "source": "last video.mp4:19724705",
+    "sourceHeight": 1080,
+    "renditions": [
+      "1080",
+      "720"
+    ]
+  }
+}

@@ -1,0 +1,466 @@
+/* ==================================================================
+   05 / OUR APPROACH — editorial collage
+   Desktop: poster-scale stage (1536 × 760 reference frame).
+   ================================================================== */
+.section {
+  position: relative;
+  background: #f2f2f2;
+  color: var(--ink);
+  container-type: inline-size;
+  padding-top: clamp(24px, 2.2vw, 40px);
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 1536 / 760;
+  overflow: hidden;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cross {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+}
+
+/* ---- heading block ------------------------------------------------- */
+.headBlock {
+  position: absolute;
+  left: 3.6%;
+  top: 2.9%;
+  width: 14%;
+  z-index: 3;
+}
+
+.label {
+  margin-bottom: 1.4cqw;
+}
+
+.keywords {
+  display: flex;
+  flex-direction: column;
+  font-size: 2.15cqw;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.headRule {
+  margin: 1.1cqw 0 1cqw;
+}
+
+.tagline {
+  font-size: max(11px, 0.9cqw);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* ---- frames ------------------------------------------------------------ */
+.frame {
+  position: absolute;
+  left: var(--l);
+  top: var(--t);
+  width: var(--w);
+  height: var(--h);
+  margin: 0;
+  z-index: 2;
+}
+
+.frame[data-frame='profile'] {
+  z-index: 3;
+}
+
+.frameEdge {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+}
+
+.framed .frameEdge {
+  inset: -0.3cqw;
+  border: 0.3cqw solid #fff;
+  box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.5);
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  background: #101010;
+  will-change: clip-path;
+}
+
+.mask img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* ---- markers + method ----------------------------------------------------- */
+.marker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.5cqw;
+  z-index: 4;
+  font-size: max(9px, 0.72cqw);
+}
+
+.stepLine {
+  width: 1.4cqw;
+  height: 1px;
+  background: var(--ink);
+  flex: none;
+  opacity: 0.7;
+}
+
+.method {
+  position: absolute;
+  left: 3.6%;
+  right: 3.6%;
+  top: 57.4%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.6cqw;
+  z-index: 3;
+  font-size: max(9px, 0.72cqw);
+  line-height: 1.3;
+}
+
+.methodStep {
+  display: grid;
+  grid-template-columns: 1.6cqw 1fr;
+  gap: 0.4cqw;
+  align-items: baseline;
+  padding-top: 0.45cqw;
+  border-top: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.methodText {
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 0 0.5em;
+}
+
+.methodText {
+  display: flex;
+  flex-direction: column;
+}
+
+.methodText strong {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.methodText span {
+  color: var(--ink-soft);
+}
+
+/* ---- labels --------------------------------------------------------------- */
+.labelA,
+.labelB,
+.labelC,
+.labelD,
+.moreHuman {
+  position: absolute;
+  z-index: 3;
+  font-size: max(9px, 0.74cqw);
+}
+
+.labelA {
+  left: 41.5%;
+  top: 6.3%;
+}
+
+.labelB {
+  left: 79%;
+  top: 4.6%;
+}
+
+.moreHuman {
+  left: 95.2%;
+  top: 22%;
+}
+
+.labelC {
+  left: 9.6%;
+  top: 73%;
+}
+
+.labelD {
+  left: 51.9%;
+  top: 79.6%;
+}
+
+/* ---- giant typography ----------------------------------------------------- */
+.giant {
+  position: absolute;
+  left: 3.6%;
+  right: 3.6%;
+  top: 32.2%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.giantLine1 {
+  display: block;
+  width: 54.7%;
+  margin-left: auto;
+  height: 6.3cqw;
+  will-change: transform, clip-path;
+}
+
+.giantLine2 {
+  display: block;
+  width: 100%;
+  height: 6.4cqw;
+  margin-top: 0.7cqw;
+  will-change: transform, clip-path;
+}
+
+.giant text,
+.mGiant text {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  font-size: 137px;
+  letter-spacing: -0.02em;
+  fill: var(--ink);
+}
+
+/* ---- impact + closing ------------------------------------------------------ */
+.impact {
+  position: absolute;
+  left: 62.8%;
+  top: 64.5%;
+  z-index: 3;
+}
+
+.impactLine {
+  position: absolute;
+  left: 9.6cqw;
+  top: -1cqw;
+  width: 1px;
+  height: 7cqw;
+  background: var(--ink);
+  opacity: 0.6;
+}
+
+.impactHead {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.75cqw;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.impact :global(.rule) {
+  margin-top: 1cqw;
+}
+
+.closing {
+  position: absolute;
+  left: 66.1%;
+  top: 82.6%;
+  width: 17cqw;
+  font-size: max(10px, 0.86cqw);
+  line-height: 1.45;
+  z-index: 3;
+}
+
+.cue {
+  position: absolute;
+  left: 88.7%;
+  top: 84%;
+  z-index: 3;
+}
+
+.foot {
+  position: absolute;
+  left: 3.6%;
+  right: 3.6%;
+  bottom: 1.6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: max(9px, 0.72cqw);
+  z-index: 3;
+}
+
+.footCenter,
+.footRight {
+  white-space: pre;
+}
+
+/* ---- mobile tree hidden on desktop --------------------------------------- */
+.mobile {
+  display: none;
+}
+
+/* ==================================================================
+   Tablet / mobile — rebuilt as a vertical editorial sequence
+   ================================================================== */
+@media (max-width: 1023px) {
+  .stage {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+    padding: 24px var(--gutter) 40px;
+  }
+
+  .mHead {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .mKeywords {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(34px, 10vw, 62px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+  }
+
+  .mTagline {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .mCollage {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    grid-template-areas:
+      'a b'
+      'a c'
+      'd c';
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .mFrame {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .mFrame:first-child {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+
+  .mLabelA {
+    align-self: end;
+    padding: 8px 0 6px;
+    font-size: 11px;
+  }
+
+  .mGiant {
+    margin: 30px calc(var(--gutter) * -1) 0;
+    padding: 0 var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: 2vw;
+  }
+
+  .mGiant svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .mGiant svg:first-child {
+    width: 62%;
+    align-self: flex-end;
+  }
+
+  .mSteps {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .mStep {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    gap: 16px;
+    align-items: center;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+
+  .mStepMedia {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .mStepText {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 15px;
+  }
+
+  .mStepText strong {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+
+  .mStepText > span:last-child {
+    color: var(--ink-soft);
+  }
+
+  .mImpact {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mImpact .impactHead {
+    font-size: clamp(26px, 7vw, 36px);
+  }
+
+  .mClosing {
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 34em;
+  }
+
+  .mFoot {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 36px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .mSteps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mHead {
+    max-width: 640px;
+  }
+}

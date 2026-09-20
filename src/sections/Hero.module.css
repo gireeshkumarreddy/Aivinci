@@ -1,0 +1,648 @@
+/* ==================================================================
+   02 / HOMEPAGE — cinematic hero
+   Desktop composes on a 16:9 "stage" (container units = % of the
+   reference frame). Below 1024px the composition is rebuilt as a
+   deliberate vertical sequence.
+   ================================================================== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 55% at 50% 42%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #f1f1f1 0%, #ececec 100%);
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(90% 80% at 50% 50%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.06) 100%);
+}
+
+.stage {
+  position: relative;
+  width: min(100%, calc(100vh * 16 / 9));
+  width: min(100%, calc(100svh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  container-type: inline-size;
+  container-name: stage;
+}
+
+/* ---- character ----------------------------------------------------- */
+.character {
+  position: absolute;
+  left: 30.6%;
+  top: 12.4%;
+  width: 43.7%;
+  height: 87.6%;
+  z-index: 2;
+  will-change: transform, filter, opacity;
+  /* the photograph's box below is sized from this figure (cqw / cqh) */
+  container-type: size;
+}
+
+/* the photograph's box: sized like `object-fit: contain` (never wider or taller than the figure,
+   the image's own ratio), seated at the bottom centre */
+.figureBox {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100cqw, calc(100cqh * 671 / 766));
+  aspect-ratio: 671 / 766;
+}
+
+.person {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.rim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---- the light on his specs ---------------------------------------- */
+/* everything in this layer is masked to the two lenses (lens-mask.png is traced on person.png) */
+.glint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  -webkit-mask-image: url('/assets/hero/lens-mask.png');
+  mask-image: url('/assets/hero/lens-mask.png');
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  will-change: opacity;
+}
+
+/* the glass itself: a soft specular that stays on the lenses */
+.shine {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.22) 45%, rgba(255, 255, 255, 0) 100%);
+}
+
+.shineNear {
+  left: 28.6%;
+  top: 19.4%;
+  width: 6.4%;
+  height: 4.6%;
+  transform: rotate(-24deg);
+}
+
+.shineFar {
+  left: 26.4%;
+  top: 23%;
+  width: 3.2%;
+  height: 2.6%;
+  transform: rotate(-24deg);
+}
+
+/* the flash: a bright diagonal streak with a soft halo and a thin trailing line, sweeping across
+   the lenses (the layer above masks it to the glass) */
+.streak {
+  position: absolute;
+  left: 22%;
+  top: 16%;
+  width: 20%;
+  height: 14%;
+  opacity: 0;
+  background: linear-gradient(
+    112deg,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.25) 44%,
+    rgba(255, 255, 255, 0.9) 47.5%,
+    #fff 49%,
+    rgba(255, 255, 255, 0.9) 50.5%,
+    rgba(255, 255, 255, 0.25) 54%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  filter: blur(0.5px);
+  will-change: transform, opacity;
+}
+
+.streak::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(112deg, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0.7) 63%, rgba(255, 255, 255, 0) 66%);
+}
+
+/* ---- left system --------------------------------------------------- */
+.left {
+  position: absolute;
+  left: 3.6%;
+  top: 22.6%;
+  width: 34%;
+  z-index: 3;
+}
+
+.label {
+  font-size: max(12px, 1.1cqw);
+  letter-spacing: 0;
+  font-weight: 500;
+  margin-bottom: 0.9cqw;
+}
+
+.headline {
+  font-size: 4.9cqw;
+  display: flex;
+  flex-direction: column;
+}
+
+.h1a {
+  color: var(--ink);
+}
+
+.h1b {
+  color: var(--ink-mid);
+}
+
+.period {
+  color: var(--ink);
+}
+
+.rule {
+  margin: 1.6cqw 0 1.4cqw;
+  width: 3cqw;
+}
+
+.body {
+  font-size: max(12.5px, 1.02cqw);
+  line-height: 1.5;
+  max-width: 32cqw;
+}
+
+.ctas {
+  position: absolute;
+  left: 3.6%;
+  top: 59.6%;
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  z-index: 3;
+}
+
+.ctas :global(button) {
+  height: max(40px, 3.6cqw);
+  font-size: max(12px, 1.02cqw);
+  padding-inline: max(16px, 1.7cqw);
+}
+
+.playDot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink);
+}
+
+/* ---- stats box ------------------------------------------------------ */
+.stats {
+  position: absolute;
+  left: 3.6%;
+  top: 69%;
+  width: 23.7%;
+  height: 24.4%;
+  display: grid;
+  grid-template-columns: 1.14fr 1fr;
+  gap: 0.7cqw;
+  padding: 0.7cqw;
+  border-radius: 0.8cqw;
+  background: #e2e2e2;
+  z-index: 3;
+}
+
+.statDark {
+  position: relative;
+  border-radius: 0.55cqw;
+  background: var(--ink);
+  color: var(--white);
+  padding: 1cqw 0.9cqw 0.8cqw;
+  display: flex;
+  flex-direction: column;
+}
+
+.statValue {
+  font-size: 2.55cqw;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: max(9px, 0.78cqw);
+  margin-top: 0.4cqw;
+  opacity: 0.9;
+}
+
+.disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35cqw 0.7cqw;
+  margin-top: auto;
+  margin-bottom: 0.75cqw;
+  opacity: 0.75;
+  font-size: max(8.5px, 0.62cqw);
+}
+
+.viewWork {
+  width: 100%;
+  height: max(32px, 2.5cqw) !important;
+  font-size: max(10px, 0.82cqw) !important;
+}
+
+.statPhoto {
+  position: relative;
+  border-radius: 0.55cqw;
+  overflow: hidden;
+  color: var(--white);
+  background: #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.9cqw 0.8cqw;
+}
+
+.statPhoto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  filter: grayscale(1) contrast(1.05);
+}
+
+.statPhoto .statValue,
+.statPhoto .statLabel {
+  position: relative;
+  text-align: right;
+}
+
+.statArrow {
+  position: absolute;
+  top: 0.7cqw;
+  right: 0.7cqw;
+}
+
+/* ---- right system ---------------------------------------------------- */
+.hand {
+  position: absolute;
+  left: 66%;
+  top: 22%;
+  width: 24%;
+  font-size: 2.45cqw;
+  z-index: 3;
+  color: var(--ink);
+  opacity: 0;
+}
+
+.pill {
+  position: absolute;
+  right: 3%;
+  top: 30.2%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8cqw;
+  padding: 0.7cqw 1.1cqw 0.7cqw 0.8cqw;
+  border-radius: var(--radius-pill);
+  background: #e1e1e1;
+  font-size: max(10px, 0.92cqw);
+  line-height: 1.15;
+  font-weight: 500;
+  z-index: 3;
+}
+
+.pill svg {
+  flex: none;
+  width: 1.7cqw;
+  height: 1.7cqw;
+}
+
+.available {
+  position: absolute;
+  right: 3.4%;
+  top: 50.3%;
+  text-align: right;
+  font-size: max(13px, 1.25cqw);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  z-index: 3;
+}
+
+.dot {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 0.2em;
+  vertical-align: middle;
+}
+
+.featured {
+  position: absolute;
+  left: 75.4%;
+  top: 66.2%;
+  width: 21%;
+  z-index: 3;
+}
+
+.featLabel {
+  font-size: max(10px, 0.85cqw);
+  color: var(--ink-soft);
+}
+
+.featHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.3cqw;
+}
+
+.featTitle {
+  font-size: max(14px, 1.3cqw);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.year {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3cqw 0.8cqw;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-size: max(10px, 0.85cqw);
+  font-weight: 500;
+}
+
+.featType {
+  font-size: max(10px, 0.85cqw);
+  margin: 0.2cqw 0 0.5cqw;
+}
+
+.featMedia {
+  background: var(--paper);
+}
+
+.progress {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 9%;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  width: 26%;
+  height: 100%;
+  background: var(--white);
+}
+
+/* ==================================================================
+   Mobile / tablet: deliberately recomposed vertical sequence
+   ================================================================== */
+@media (max-width: 1023px) {
+  .hero {
+    display: block;
+    min-height: 0;
+    padding: calc(var(--header-h) + 28px) 0 40px;
+  }
+
+  .stage {
+    width: 100%;
+    aspect-ratio: auto;
+    container-type: normal;
+    padding: 0 var(--gutter);
+  }
+
+  .character,
+  .left,
+  .ctas,
+  .stats,
+  .featured,
+  .hand,
+  .pill,
+  .available {
+    position: static;
+    width: auto;
+    height: auto;
+  }
+
+  .label {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+  }
+
+  .headline {
+    font-size: clamp(34px, 11.4vw, 92px);
+  }
+
+  .rule {
+    margin: 22px 0 18px;
+    width: 44px;
+  }
+
+  .body {
+    font-size: clamp(15px, 4vw, 18px);
+    max-width: 34em;
+  }
+
+  .ctas {
+    margin-top: 26px;
+    gap: 14px 20px;
+    flex-wrap: wrap;
+  }
+
+  /* the figure: character to the right, handwriting + controls on the left */
+  .mobileFigure {
+    position: relative;
+    margin: 28px calc(var(--gutter) * -1) 0;
+    height: clamp(300px, 96vw, 560px);
+    overflow: hidden;
+    background: radial-gradient(70% 60% at 62% 40%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%);
+  }
+
+  .character {
+    position: absolute;
+    right: -7%;
+    bottom: 0;
+    width: 88%;
+    max-width: 520px;
+    height: 100%;
+    z-index: 1;
+    margin: 0;
+  }
+
+  .figureBox {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+
+  .hand {
+    position: absolute;
+    left: var(--gutter);
+    top: 8%;
+    width: 46%;
+    font-size: clamp(20px, 6vw, 34px);
+    z-index: 2;
+  }
+
+  .mobileRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .pill {
+    gap: 10px;
+    padding: 10px 14px 10px 10px;
+    font-size: 12px;
+    background: rgba(225, 225, 225, 0.9);
+    align-self: flex-start;
+  }
+
+  .pill svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .available {
+    text-align: right;
+    font-size: 15px;
+    margin-top: 0;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 14px;
+    margin-top: 26px;
+    min-height: 220px;
+  }
+
+  .statDark,
+  .statPhoto {
+    border-radius: 9px;
+    padding: 16px 14px 12px;
+  }
+
+  .statValue {
+    font-size: clamp(32px, 9vw, 44px);
+  }
+
+  .statLabel {
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  .disciplines {
+    font-size: 9px;
+    gap: 4px 10px;
+    margin-bottom: 12px;
+  }
+
+  .viewWork {
+    height: 38px !important;
+    font-size: 13px !important;
+  }
+
+  .statArrow {
+    top: 12px;
+    right: 12px;
+  }
+
+  .featured {
+    margin-top: 22px;
+  }
+
+  .featLabel,
+  .featType {
+    font-size: 13px;
+  }
+
+  .featTitle {
+    font-size: 20px;
+  }
+
+  .year {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+
+  .featHead {
+    margin-top: 4px;
+  }
+
+  .featType {
+    margin: 2px 0 10px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .stats {
+    max-width: 520px;
+  }
+
+  .featured {
+    max-width: 520px;
+  }
+
+  .character {
+    right: 4%;
+    width: 52%;
+  }
+}
+
+@media (max-width: 360px) {
+  .headline {
+    font-size: 42px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .statPhoto {
+    min-height: 180px;
+  }
+}

@@ -1,0 +1,574 @@
+/* ==================================================================
+   09 / PRODUCT SYSTEM — modular 3D cards + glass
+   ================================================================== */
+.section {
+  --lx: 40%;
+  --ly: 30%;
+  --thick: 12px;
+  position: relative;
+  background: #060607;
+  color: var(--white);
+  container-type: inline-size;
+  overflow: hidden;
+  padding: calc(var(--header-h) * 0) 0 0;
+}
+
+.stage {
+  position: relative;
+  padding: clamp(18px, 1.6vw, 28px) 0 0;
+}
+
+/* ---- grid ------------------------------------------------------------------ */
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20.3% 10.8% 19.1% 19.1% 10.8% 1fr;
+  grid-template-rows: 48.7% 19.1% 32.2%;
+  aspect-ratio: 1672 / 760;
+  gap: 4px;
+  padding: 0 4px;
+  perspective: 2400px;
+  transform-style: preserve-3d;
+}
+
+.cell {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: #0b0b0d;
+  overflow: hidden;
+}
+
+.title {
+  grid-column: 1 / 3;
+  grid-row: 1;
+  padding: 3cqw 3.6cqw;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.4cqw;
+  font-size: 5.2cqw;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+
+.titleRule {
+  margin: 1.4cqw 0 1cqw;
+  opacity: 0.6;
+}
+
+.sub {
+  font-size: max(9px, 0.74cqw);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.blue {
+  grid-column: 1;
+  grid-row: 2 / 4;
+}
+
+.cellA {
+  grid-column: 2;
+  grid-row: 2 / 4;
+}
+
+.cellLabels {
+  grid-column: 3;
+  grid-row: 1;
+  padding: 2.4cqw 2cqw;
+}
+
+.cellB {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.cellC {
+  grid-column: 3 / 5;
+  grid-row: 2;
+}
+
+.cellBuilt {
+  grid-column: 3;
+  grid-row: 3;
+  padding: 0 0 2cqw 11cqw;
+  display: flex;
+  align-items: flex-end;
+  z-index: 3;
+}
+
+.cellD {
+  grid-column: 4;
+  grid-row: 3;
+}
+
+.violet {
+  grid-column: 5 / 7;
+  grid-row: 1;
+}
+
+.white {
+  grid-column: 5 / 7;
+  grid-row: 2;
+}
+
+.cellTools {
+  grid-column: 5;
+  grid-row: 3;
+  padding: 2cqw 1.2cqw 1.4cqw 2cqw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lime {
+  grid-column: 6;
+  grid-row: 3;
+}
+
+.cellText {
+  font-size: max(9px, 0.74cqw);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cellFoot {
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
+}
+
+/* ---- glass cards -------------------------------------------------------- */
+.card {
+  --tone: #fff;
+  position: relative;
+  border-radius: 6px;
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  text-align: left;
+  color: var(--ink);
+  isolation: isolate;
+  will-change: transform, opacity;
+}
+
+/* hover/selection transitions only once the entrance choreography has settled (never fighting GSAP) */
+.section[data-revealed] .card {
+  transition: transform 0.7s var(--ease-cine);
+}
+
+.card:hover {
+  transform: translateZ(10px);
+}
+
+.card.selected {
+  transform: translateZ(26px);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--tone) 90%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+    inset 1px 0 0 rgba(255, 255, 255, 0.25);
+  overflow: hidden;
+  transform: translateZ(calc(var(--thick) / 2));
+}
+
+/* reflection: a soft light band that follows the pointer light */
+.sheen {
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(40% 40% at var(--lx) var(--ly), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 70%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.cardInner {
+  position: absolute;
+  inset: 0;
+  padding: 1.6cqw 1.6cqw 1.4cqw;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardNum {
+  align-self: flex-end;
+  font-size: max(9px, 0.74cqw);
+}
+
+.cardTick {
+  align-self: flex-end;
+  width: 1px;
+  height: 2.2cqw;
+  background: currentColor;
+  opacity: 0.7;
+  margin-top: 0.6cqw;
+}
+
+.cardName {
+  margin-top: auto;
+  font-size: max(13px, 1.25cqw);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.cardMeta {
+  margin-top: 0.5cqw;
+  opacity: 0.7;
+  font-size: max(8px, 0.62cqw);
+}
+
+/* edge faces: real thickness, lit like glass */
+.edge {
+  position: absolute;
+  background: color-mix(in srgb, var(--tone) 70%, #000);
+  backface-visibility: hidden;
+}
+
+.edgeTop,
+.edgeBottom {
+  left: 0;
+  right: 0;
+  height: var(--thick);
+}
+
+.edgeTop {
+  top: 0;
+  transform-origin: top;
+  transform: rotateX(-90deg) translateZ(calc(var(--thick) / -2));
+  background: color-mix(in srgb, var(--tone) 55%, #fff);
+}
+
+.edgeBottom {
+  bottom: 0;
+  transform-origin: bottom;
+  transform: rotateX(90deg) translateZ(calc(var(--thick) / -2));
+}
+
+.edgeLeft,
+.edgeRight {
+  top: 0;
+  bottom: 0;
+  width: var(--thick);
+}
+
+.edgeLeft {
+  left: 0;
+  transform-origin: left;
+  transform: rotateY(90deg) translateZ(calc(var(--thick) / -2));
+  background: color-mix(in srgb, var(--tone) 62%, #fff);
+}
+
+.edgeRight {
+  right: 0;
+  transform-origin: right;
+  transform: rotateY(-90deg) translateZ(calc(var(--thick) / -2));
+}
+
+.contact {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -8%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  filter: blur(14px);
+  transform: translateZ(-1px);
+  z-index: -1;
+  opacity: 0.8;
+  transition: opacity 0.5s ease, transform 0.7s var(--ease-cine);
+}
+
+.card.selected .contact {
+  transform: translateZ(-1px) translateY(10px) scale(1.04);
+}
+
+.tone-white {
+  color: var(--ink);
+}
+
+.tone-blue {
+  color: var(--white);
+}
+
+.tone-violet,
+.tone-lime {
+  color: var(--ink);
+}
+
+/* ---- central object --------------------------------------------------------- */
+.objectWrap {
+  position: absolute;
+  left: 19.7%;
+  top: 4%;
+  width: 49.6%;
+  height: 97%;
+  z-index: 2;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.objectShadow {
+  position: absolute;
+  left: 20%;
+  right: 8%;
+  bottom: 2%;
+  height: 14%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.75);
+  filter: blur(22px);
+}
+
+.object {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transition: transform 0.9s var(--ease-cine);
+}
+
+.section[data-selected='violet'] .object,
+.section[data-selected='white'] .object,
+.section[data-selected='lime'] .object {
+  transform: rotate(1.4deg) translateX(2%);
+}
+
+.section[data-selected='blue'] .object {
+  transform: rotate(-1.4deg) translateX(-2%);
+}
+
+.objectInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.arm {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 40px 40px rgba(0, 0, 0, 0.55));
+}
+
+/* material response: a specular that follows the pointer light, shaped by the object's alpha */
+.armLight,
+.armTint {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: url('/assets/system/robot-arm.png') center / contain no-repeat;
+  mask: url('/assets/system/robot-arm.png') center / contain no-repeat;
+  pointer-events: none;
+}
+
+.armLight {
+  background: radial-gradient(28% 28% at var(--lx) var(--ly), rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 70%);
+  mix-blend-mode: screen;
+}
+
+.armTint {
+  background: var(--tint);
+  mix-blend-mode: color;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.section:not([data-selected='none']) .armTint {
+  opacity: 0.55;
+}
+
+/* ---- foot ---------------------------------------------------------------- */
+.foot {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: clamp(18px, 2vw, 30px) var(--gutter) clamp(22px, 2.4vw, 36px);
+}
+
+.cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--white);
+  text-align: left;
+  justify-self: start;
+}
+
+.cue svg {
+  transition: transform 0.5s var(--ease-out);
+}
+
+.cue:hover svg {
+  transform: translateX(4px);
+}
+
+.selectedState {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footRight {
+  justify-self: end;
+  white-space: pre;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ==================================================================
+   Tablet / mobile — the puzzle re-assembles as a two-column stack
+   ================================================================== */
+@media (max-width: 1023px) {
+  .grid {
+    aspect-ratio: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 8px;
+    padding: 0 var(--gutter);
+    perspective: 1600px;
+  }
+
+  .title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 26px 22px 28px;
+  }
+
+  .heading {
+    font-size: clamp(40px, 12vw, 64px);
+    margin-top: 16px;
+  }
+
+  .titleRule {
+    margin: 18px 0 12px;
+  }
+
+  .sub {
+    font-size: 11px;
+  }
+
+  .cellLabels {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 18px;
+    min-height: 160px;
+  }
+
+  .violet {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 160px;
+  }
+
+  .objectWrap {
+    position: relative;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 836 / 640;
+    margin: 6px 0;
+  }
+
+  .blue {
+    grid-column: 1;
+    grid-row: 4;
+    min-height: 200px;
+  }
+
+  .white {
+    grid-column: 2;
+    grid-row: 4;
+    min-height: 200px;
+  }
+
+  .cellBuilt {
+    grid-column: 1;
+    grid-row: 5;
+    padding: 18px;
+    min-height: 160px;
+    align-items: flex-start;
+  }
+
+  .lime {
+    grid-column: 2;
+    grid-row: 5;
+    min-height: 160px;
+  }
+
+  .cellTools {
+    grid-column: 1 / -1;
+    grid-row: 6;
+    padding: 18px;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
+  .cellA,
+  .cellB,
+  .cellC,
+  .cellD {
+    display: none;
+  }
+
+  .cellText {
+    font-size: 11px;
+  }
+
+  .cardInner {
+    padding: 16px;
+  }
+
+  .cardNum {
+    font-size: 11px;
+  }
+
+  .cardTick {
+    height: 28px;
+    margin-top: 6px;
+  }
+
+  .cardName {
+    font-size: clamp(16px, 4.6vw, 22px);
+  }
+
+  .cardMeta {
+    font-size: 9px;
+    margin-top: 6px;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .card.selected {
+    transform: translateZ(14px);
+  }
+
+  .foot {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 22px var(--gutter) 36px;
+  }
+
+  .footRight {
+    justify-self: start;
+  }
+}

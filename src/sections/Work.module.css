@@ -1,0 +1,602 @@
+/* ==================================================================
+   06 / OUR WORK — red cinematic chapter, a video rail flowing right → left
+   ================================================================== */
+.section {
+  position: relative;
+  background: var(--red-deep);
+  color: var(--white);
+  overflow: hidden;
+  container-type: inline-size;
+  isolation: isolate;
+}
+
+.env {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.env img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  transform: translateY(var(--py, 0px)) scale(1.06);
+  will-change: transform;
+}
+
+.envShade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(20, 3, 2, 0.55) 0%, rgba(20, 3, 2, 0) 26%),
+    linear-gradient(0deg, rgba(20, 3, 2, 0.6) 0%, rgba(20, 3, 2, 0) 30%);
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 1672 / 941;
+  z-index: 1;
+}
+
+/* ---- heading --------------------------------------------------------- */
+.headBlock {
+  position: absolute;
+  left: 3.6%;
+  top: 19%;
+  z-index: 2;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 1.6cqw;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  font-size: 5cqw;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+
+.by {
+  margin-top: 1.1cqw;
+  margin-left: 22.4cqw;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.rightLabels {
+  position: absolute;
+  right: 3.6%;
+  top: 21.8%;
+  padding-left: 1.6cqw;
+  border-left: 1px solid rgba(255, 255, 255, 0.55);
+  font-size: max(9px, 0.74cqw);
+  z-index: 2;
+}
+
+.categories {
+  position: absolute;
+  right: 3.6%;
+  top: 40.4%;
+  display: flex;
+  gap: 1cqw;
+  letter-spacing: 0.18em;
+  font-size: max(9px, 0.74cqw);
+  z-index: 2;
+}
+
+.slash {
+  margin-right: 1cqw;
+  opacity: 0.5;
+}
+
+/* ---- rail ------------------------------------------------------------ */
+/* The rail is a window onto a track that carries the card set twice and drifts right → left
+   without end (Work.tsx moves it every frame and wraps it by one set width). */
+.rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44.6%;
+  height: 32%;
+  overflow: hidden;
+  cursor: grab;
+  z-index: 3;
+  padding-top: 1.8%;
+  /* horizontal drags belong to the rail; vertical touch pans still scroll the page */
+  touch-action: pan-y;
+  user-select: none;
+  /* a real perspective scene: cards are posed in depth relative to the viewer */
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+}
+
+.rail.dragging {
+  cursor: grabbing;
+}
+
+.railTrack {
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  padding-left: 0.5cqw;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.railSet {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.48cqw;
+  padding-right: 0.48cqw;
+  transform-style: preserve-3d;
+}
+
+.tile {
+  --enter: 0;
+  --ry: 0deg;
+  --tz: 0px;
+  position: relative;
+  flex: none;
+  width: 14.35cqw;
+  transform-style: preserve-3d;
+  will-change: opacity;
+}
+
+/* the 3D body of a card: rail pose (--ry / --tz, set every frame) + entrance from the right (--enter 1 → 0) */
+.tile3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: translate3d(calc(var(--enter) * 70vw), 0, calc(var(--tz) - var(--enter) * 520px)) rotateY(calc(var(--ry) - var(--enter) * 42deg));
+  transform-origin: 50% 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.tileBody {
+  position: relative;
+  transform: translateZ(0);
+}
+
+.section[data-revealed] .tileBody {
+  transition: transform 0.35s var(--ease-out);
+}
+
+.featured {
+  width: 13.3cqw;
+  margin-top: -1.8%;
+}
+
+.featured .tile3d {
+  padding: 0.35cqw;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  box-shadow: 0 40px 60px -30px rgba(0, 0, 0, 0.7);
+}
+
+@media (hover: hover) {
+  .section[data-revealed] .tile:hover .tileBody {
+    transform: translate3d(0, -6px, 24px);
+  }
+}
+
+.tileMedia {
+  position: relative;
+  will-change: clip-path;
+}
+
+.tileHit {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+
+.tileNum {
+  position: absolute;
+  left: 0.7cqw;
+  bottom: 0.9cqw;
+  color: var(--white);
+  font-size: max(9px, 0.74cqw);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.featured .tileNum {
+  left: 1cqw;
+  bottom: 1.1cqw;
+}
+
+.tileMeta {
+  position: absolute;
+  left: 2.4cqw;
+  bottom: 0.75cqw;
+  right: 3.2cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.35s var(--ease-out);
+  pointer-events: none;
+  z-index: 2;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.featured .tileMeta {
+  left: 2.8cqw;
+  bottom: 1cqw;
+}
+
+.tile:hover .tileMeta,
+.tile[aria-current='true'] .tileMeta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tileTitle {
+  font-size: max(11px, 0.9cqw);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.tileCat {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---- foot ------------------------------------------------------------ */
+.ideas {
+  position: absolute;
+  left: 3.6%;
+  top: 75%;
+  font-size: max(9px, 0.74cqw);
+  z-index: 2;
+}
+
+.real {
+  position: absolute;
+  left: 76.3%;
+  top: 76.5%;
+  display: flex;
+  flex-direction: column;
+  font-size: max(10px, 0.84cqw);
+  line-height: 1.4;
+  z-index: 2;
+}
+
+.realRule {
+  margin-top: 0.9cqw;
+}
+
+.cue {
+  position: absolute;
+  right: 3.2%;
+  top: 77%;
+  z-index: 2;
+}
+
+.progress {
+  position: absolute;
+  left: 3.6%;
+  right: 3.6%;
+  top: 91.4%;
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  z-index: 2;
+  font-size: max(9px, 0.74cqw);
+}
+
+.track {
+  position: relative;
+  width: 22cqw;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.thumb {
+  position: absolute;
+  top: -1px;
+  width: 14%;
+  height: 3px;
+  margin-left: -7%;
+  background: var(--white);
+  transition: left 0.5s var(--ease-out);
+}
+
+.arrows {
+  display: inline-flex;
+  gap: 8px;
+  margin-left: 1cqw;
+}
+
+.viewAll {
+  margin-left: auto;
+  color: var(--white);
+}
+
+/* ---- case-study panel ---------------------------------------------------- */
+.panel {
+  position: fixed;
+  inset: 0;
+  z-index: 960;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+}
+
+.panel[aria-hidden='false'] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.45s ease, visibility 0s;
+}
+
+.panelBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 6, 6, 0.86);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: default;
+}
+
+.panelInner {
+  position: relative;
+  width: min(1120px, 100%);
+  max-height: calc(100vh - 2 * var(--gutter));
+  overflow: auto;
+  color: var(--white);
+  transform: translateY(14px) scale(0.985);
+  transition: transform 0.55s var(--ease-cine);
+}
+
+.panel[aria-hidden='false'] .panelInner {
+  transform: translateY(0) scale(1);
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--night-line);
+  margin-bottom: 26px;
+}
+
+.panelCount {
+  margin-left: auto;
+  color: var(--white-50);
+}
+
+.panelClose {
+  color: var(--white);
+}
+
+.panelBody {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.panelCat {
+  color: var(--white-50);
+}
+
+.panelTitle {
+  margin-top: 14px;
+  font-size: clamp(32px, 3.6vw, 56px);
+}
+
+.panelDesc {
+  margin-top: 18px;
+  font-size: clamp(14px, 1.05vw, 16px);
+  line-height: 1.5;
+  color: var(--white-70);
+  max-width: 34em;
+}
+
+.panelNav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+  color: var(--white);
+}
+
+.panelNav :global(button:last-child) {
+  margin-left: auto;
+}
+
+/* ==================================================================
+   Tablet / mobile
+   ================================================================== */
+@media (max-width: 1023px) {
+  .stage {
+    aspect-ratio: auto;
+    min-height: 0;
+    padding: calc(var(--header-h) + 16px) 0 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .headBlock,
+  .rightLabels,
+  .categories,
+  .rail,
+  .ideas,
+  .real,
+  .cue,
+  .progress {
+    position: static;
+  }
+
+  .headBlock {
+    padding: 0 var(--gutter);
+  }
+
+  .label {
+    margin-bottom: 18px;
+  }
+
+  .heading {
+    font-size: clamp(40px, 12vw, 84px);
+  }
+
+  .by {
+    margin: 14px 0 0;
+    font-size: 11px;
+  }
+
+  .rightLabels {
+    margin: 26px var(--gutter) 0;
+    padding-left: 14px;
+    font-size: 11px;
+    align-self: flex-start;
+  }
+
+  .categories {
+    margin: 18px var(--gutter) 0;
+    font-size: 11px;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+
+  .slash {
+    margin-right: 14px;
+  }
+
+  .rail {
+    height: auto;
+    margin-top: clamp(140px, 42vw, 300px);
+    padding: 20px 0 0;
+  }
+
+  .railTrack {
+    padding-left: calc(var(--gutter) - 10px);
+  }
+
+  .railSet {
+    gap: 10px;
+    padding-right: 10px;
+  }
+
+  .tile {
+    width: min(62vw, 300px);
+  }
+
+  .featured {
+    width: min(58vw, 280px);
+    margin-top: -20px;
+  }
+
+  .featured .tile3d {
+    padding: 6px;
+  }
+
+  .tileNum {
+    left: 10px;
+    bottom: 12px;
+    font-size: 11px;
+  }
+
+  .tileMeta,
+  .featured .tileMeta {
+    left: 36px;
+    right: 52px;
+    bottom: 12px;
+    opacity: 1;
+    transform: none;
+  }
+
+  .featured .tileNum {
+    left: 10px;
+    bottom: 12px;
+  }
+
+  .tileTitle {
+    font-size: 14px;
+  }
+
+  .progress {
+    margin: 24px var(--gutter) 0;
+    gap: 12px;
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+
+  .track {
+    flex: 1;
+    width: auto;
+    min-width: 80px;
+  }
+
+  .arrows {
+    margin-left: 0;
+  }
+
+  .viewAll {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .ideas {
+    margin: 36px var(--gutter) 0;
+    font-size: 11px;
+  }
+
+  .real {
+    margin: 22px var(--gutter) 0;
+    font-size: 15px;
+  }
+
+  .realRule {
+    margin-top: 14px;
+  }
+
+  .cue {
+    margin: 26px var(--gutter) 0;
+    align-self: flex-end;
+  }
+
+  .panelBody {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .panelNav {
+    flex-wrap: wrap;
+  }
+
+  .panelNav :global(button:last-child) {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .env {
+    bottom: auto;
+    height: clamp(460px, 130vw, 640px);
+    -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+  }
+
+  .env img {
+    object-position: 50% 12%;
+  }
+
+  .envShade {
+    background:
+      linear-gradient(180deg, rgba(20, 3, 2, 0.55) 0%, rgba(20, 3, 2, 0.05) 34%),
+      linear-gradient(0deg, rgba(20, 3, 2, 0.65) 0%, rgba(20, 3, 2, 0) 36%);
+  }
+}

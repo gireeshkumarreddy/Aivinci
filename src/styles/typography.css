@@ -1,0 +1,119 @@
+/* ------------------------------------------------------------------
+   Editorial typography system (shared across sections)
+   ------------------------------------------------------------------ */
+
+/* small uppercase editorial labels ("02 / SERVICES", "FILM BRAND CONTENT") */
+.t-mono {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.t-mono-sm {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 1.45;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* small sans uppercase stack labels ("IDEAS / PEOPLE / STORIES") */
+.t-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.32;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.t-label-wide {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* display headings */
+.t-display {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.t-display-black {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.t-headline {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.t-headline-light {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.t-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+}
+
+.t-body-lg {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: clamp(17px, 1.35vw, 22px);
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+}
+
+.t-hand {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+/* short editorial rule under labels */
+.rule {
+  display: block;
+  width: 26px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.85;
+}
+
+.rule--long {
+  width: 44px;
+}
+
+.t-muted {
+  opacity: 0.62;
+}

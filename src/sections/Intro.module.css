@@ -1,0 +1,126 @@
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #fbfbfb;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scene {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+/* ---- matte elements ------------------------------------------------ */
+.element {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.ball {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #5a5a5a 0%, #262626 38%, #0a0a0a 75%, #171717 100%);
+  box-shadow: inset -6px -8px 14px rgba(255, 255, 255, 0.06);
+  will-change: transform, opacity;
+}
+
+.ballShadow {
+  position: absolute;
+  left: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0) 70%);
+  filter: blur(4px);
+}
+
+.line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1px;
+  background: #151515;
+  transform-origin: 0 50%;
+  opacity: 0.9;
+}
+
+/* ---- orbital system ---------------------------------------------- */
+.orbit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 640px;
+  height: 640px;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+
+.orbit ellipse {
+  fill: none;
+  stroke: #2a2a2a;
+  stroke-width: 0.6;
+  opacity: 0.85;
+}
+
+.orbit line {
+  stroke: #2a2a2a;
+  stroke-width: 0.7;
+}
+
+.core {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 36% 30%, #ffffff 0%, #ececec 16%, #b9b9b9 36%, #5d5d5d 62%, #2f2f2f 82%, #6f6f6f 100%);
+  box-shadow: 0 30px 40px -24px rgba(0, 0, 0, 0.45);
+  will-change: transform, opacity, filter;
+}
+
+.core::after {
+  content: '';
+  position: absolute;
+  inset: 8% 10% 55% 40%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 70%);
+}
+
+/* ---- the lockup + shadow ------------------------------------------- */
+.shadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shadow img {
+  width: 100%;
+  height: auto;
+}
+
+.lockupWrap {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.lockupWrap[data-placed='true'] {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .orbit {
+    width: 420px;
+    height: 420px;
+  }
+}
