@@ -594,21 +594,38 @@ VIDEO_SOURCES = {
     "first-hero-video": ["Video (1) HD.mp4", "Video 1 HD.mp4", "1st hero video HD.mp4", "1st hero video.mp4"],
     "video-two": ["Video 2 HD.mp4", "video 2 hd.mp4", "2 video HD.mp4", "2 video.mp4"],
     "video-three": ["video 3 hd.mp4", "Video 3 HD.mp4", "video 3.mp4"],
-    # the client will replace this slot with the "Car Video" asset: it takes precedence as soon as it exists
-    "last-video": ["Car Video.mp4", "Car video.mp4", "car video.mp4", "Car Video HD.mp4", "Car Video",
-                   "last video HD.mp4", "Last video HD.mp4", "Video 4 HD.mp4", "video 4 hd.mp4", "Video 4 HD", "last video.mp4"],
+    # slot 04 is the Hanuman film (the 4K master "Video 4 HD"); the car film stays on disk unused
+    "last-video": ["Video 4 HD", "Video 4 HD.mp4", "video 4 hd.mp4", "last video HD.mp4", "Last video HD.mp4", "last video.mp4"],
 }
 # (suffix, height, crf, maxrate, minimum source height)
 VIDEO_TIERS = (("1440", 1440, 25, "12M", 1440), ("1080", 1080, 24, "8M", 0), ("720", 720, 26, "4M", 0))
 MANIFEST = os.path.join(ROOT, "src", "data", "video-manifest.json")
 
 
+def video_intact(path):
+    """True when the video stream really reaches the container's declared duration (a transfer
+    that stopped early leaves a file whose index promises more than the stream holds)."""
+    dur = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path],
+                         capture_output=True, text=True).stdout.strip()
+    last = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "packet=pts_time",
+                           "-of", "csv=p=0", path], capture_output=True, text=True).stdout.strip().splitlines()
+    try:
+        declared, reached = float(dur), float(last[-1].split(",")[0])
+    except (ValueError, IndexError):
+        return False
+    return reached >= declared - 0.5
+
+
 def video_source(role):
     for name in VIDEO_SOURCES[role]:
         path = os.path.join(SRC, name)
-        if os.path.exists(path):
-            return path
-    raise SystemExit(f"no source video for {role}")
+        if not os.path.exists(path):
+            continue
+        if not video_intact(path):
+            print(f"  ! {name}: the stream ends before its declared duration (incomplete file) — skipped")
+            continue
+        return path
+    raise SystemExit(f"no usable source video for {role}")
 
 
 def video_height(path):

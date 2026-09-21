@@ -64,12 +64,13 @@ writes `src/data/video-manifest.json` so the player knows which renditions exist
 | VIDEO 01 — first Hero video | tiger | `Video (1) HD.mp4` → `1st hero video.mp4` | `first-hero-video-1440/1080/720.mp4` |
 | VIDEO 02 — video two | Ganesh | `Video 2 HD.mp4` → `2 video.mp4` | `video-two-1440/1080/720.mp4` |
 | VIDEO 03 — video three | the fight | `video 3 hd.mp4` → `video 3.mp4` | `video-three-1440/1080/720.mp4` |
-| VIDEO 04 — last video | the car film | `Car Video.mp4` → `Video 4 HD` → `last video.mp4` | `last-video-1440/1080/720.mp4` |
+| VIDEO 04 — last video | Hanuman | `Video 4 HD` → `last video.mp4` | `last-video-1440/1080/720.mp4` |
 
 The 1440p tier is cut only from a 4K master and is served to large / high-density desktop screens (not
 when the browser asks to save data); phones get 720p, everything else 1080p. Re-run
 `python tools/build_assets.py video` after dropping a new master in the folder — outputs are re-encoded
-only when their source changed.
+only when their source changed. A master whose stream stops before its declared duration (an incomplete
+transfer) is reported and skipped in favour of the next source, so a broken upload can never shorten a film.
 
 Every other media area (service cards, work tiles, the product film, the hero feature) is an image: a
 `MediaSlot` without `src` renders as a plain photograph (no player affordance); pass a `src` and it becomes

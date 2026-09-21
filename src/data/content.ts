@@ -165,7 +165,7 @@ export const aiVideo = {
     { id: 'video-01', role: 'first-hero-video', name: 'Video 01', title: 'Idea', sub: 'The first idea.', seconds: 23 },
     { id: 'video-02', role: 'video-two', name: 'Video 02', title: 'Concept', sub: 'The idea becomes a concept.', seconds: 30 },
     { id: 'video-03', role: 'video-three', name: 'Video 03', title: 'Creation', sub: 'Created with AI.', seconds: 15 },
-    { id: 'video-04', role: 'last-video', name: 'Video 04', title: 'Real video', sub: 'The final frame.', seconds: 26 },
+    { id: 'video-04', role: 'last-video', name: 'Video 04', title: 'Real video', sub: 'The final frame.', seconds: 30 },
   ],
   bottomLabels: ['The final frame', 'A real video'],
 }

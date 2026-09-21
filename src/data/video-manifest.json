@@ -27,10 +27,9 @@
     ]
   },
   "last-video": {
-    "source": "Car Video.mp4:137451767",
-    "sourceHeight": 2160,
+    "source": "last video.mp4:19724705",
+    "sourceHeight": 1080,
     "renditions": [
-      "1440",
       "1080",
       "720"
     ]
