@@ -404,9 +404,14 @@
   .installation {
     position: relative;
     inset: auto;
-    aspect-ratio: 4 / 5;
-    max-height: 640px;
+    /* an explicit height (not aspect-ratio) so every percentage inside resolves the same everywhere */
+    height: min(125vw, 640px);
     overflow: hidden;
+  }
+
+  /* only the corner crosshairs on phones — the middle rows would sit on the copy */
+  .grid .cross:nth-child(n + 5):nth-child(-n + 13) {
+    display: none;
   }
 
   .screenWrap {
@@ -418,12 +423,13 @@
     object-position: 60% 50%;
   }
 
+  /* the audience sits in the lower third; REALITY and its label stay clear above their heads */
   .people {
-    left: 22%;
+    left: 26%;
     top: auto;
     bottom: 0;
-    width: 90%;
-    height: 36%;
+    width: 84%;
+    height: 31%;
   }
 
   .people img {
@@ -453,7 +459,8 @@
   .reality {
     left: var(--gutter);
     top: auto;
-    bottom: 42%;
+    bottom: 47%;
+    max-width: none;
     font-size: clamp(18px, 5.4vw, 28px);
     letter-spacing: 0.7em;
   }
@@ -461,7 +468,8 @@
   .beyond {
     left: var(--gutter);
     top: auto;
-    bottom: 36%;
+    bottom: 40%;
+    max-width: none;
     font-size: 11px;
     gap: 12px;
   }

@@ -29,10 +29,6 @@
   border-radius: 8px;
 }
 
-.brand :global([data-lockup-word]) {
-  color: var(--white);
-}
-
 .statement {
   display: flex;
   flex-direction: column;

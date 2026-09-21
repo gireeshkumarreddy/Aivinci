@@ -31,19 +31,26 @@ export function PhoneInHand({ className, onExplore }: { className?: string; onEx
   const matrix = useMemo(() => matrix3dFromHomography(quadHomography(UI_W, UI_H, HAND.screen)), [])
   usePointerTilt(outer, { maxTilt: 2.5, maxShift: 6, perspective: 1600, layers: '[data-depth]' })
 
-  // fallback scale for browsers without CSS trig/container units: measured synchronously
-  // before the first paint, then kept in step with every resize
+  // the photographed block is authored at 530 px and scaled to its rendered width: measured
+  // synchronously before the first paint, then kept in step with every resize / orientation change
   useLayoutEffect(() => {
     const el = outer.current
     if (!el) return
-    const fit = () => el.style.setProperty('--s', String(el.clientWidth / HAND.w))
+    const fit = () => {
+      const w = el.clientWidth
+      if (w > 0) el.style.setProperty('--s', String(w / HAND.w))
+    }
     fit()
     const ro = new ResizeObserver(fit)
     ro.observe(el)
     window.addEventListener('resize', fit)
+    window.addEventListener('orientationchange', fit)
+    window.addEventListener('pageshow', fit)
     return () => {
       ro.disconnect()
       window.removeEventListener('resize', fit)
+      window.removeEventListener('orientationchange', fit)
+      window.removeEventListener('pageshow', fit)
     }
   }, [])
 
@@ -51,7 +58,7 @@ export function PhoneInHand({ className, onExplore }: { className?: string; onEx
     <div
       ref={outer}
       className={[styles.outer, className].filter(Boolean).join(' ')}
-      style={{ aspectRatio: `${HAND.w} / ${HAND.h}`, '--native-w': `${HAND.w}px` } as CSSProperties}
+      style={{ aspectRatio: `${HAND.w} / ${HAND.h}` } as CSSProperties}
     >
       <div className={styles.box} style={{ width: HAND.w, height: HAND.h }}>
         {/* device (raster bezel + glass) with the live screen seated on it */}

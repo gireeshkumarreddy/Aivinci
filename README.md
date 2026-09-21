@@ -125,12 +125,18 @@ in `public/` and is committed, so a fresh clone builds and deploys as-is.
 
 ## QA
 
+Always audit the **static export** as well as the dev server: `npm run build:static`, then
+`node tools/serve-dist.mjs dist /site/ 8096` and run the audits with `QA_URL=http://127.0.0.1:8096/site/`
+— relative asset paths only fail once the files are served from a folder. `tools/qa-webkit.mjs`
+renders a page in WebKit (Playwright) as an iPhone for Safari-specific checks.
+
 ```bash
 node tools/qa.mjs audit 390 844             # overflow offenders, console errors, failed requests, tiny text
 node tools/qa.mjs shot 1440 900 out.png --full --audit
 node tools/qa-intro.mjs 390 844             # opening sequence timing trace
 node tools/qa-motion.mjs "#work" out.png 700 # frame 700 ms into the Work chapter's choreography
 node tools/qa-el.mjs "#products" out 320,390,430 844 --offset 800   # one chapter at several widths
+node tools/qa-webkit.mjs http://127.0.0.1:8096/site/?settled "#contact" out.png   # WebKit / iPhone render
 node tools/qa-interact.mjs                  # interaction smoke test
 ```
 

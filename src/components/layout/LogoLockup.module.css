@@ -5,7 +5,6 @@
   display: inline-flex;
   align-items: center;
   gap: calc(var(--mark-h) * 0.1);
-  color: var(--ink);
   white-space: nowrap;
   user-select: none;
 }
@@ -35,31 +34,35 @@
   align-items: flex-start;
   /* the artwork seats the lettering slightly below the mark's middle */
   padding-top: calc(var(--mark-h) * 0.08);
-  color: inherit;
 }
 
-/* the logo's own lettering, as alpha masks filled with the current text colour */
+/* the logo's own lettering: one image per colouring, the lockup's tone decides which shows */
 .wordA,
 .wordB {
   display: block;
-  background-color: currentColor;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
+  line-height: 0;
 }
 
-.wordA {
+.wordA img,
+.wordB img {
+  display: none;
+  width: auto;
+  -webkit-user-drag: none;
+}
+
+.lockup[data-tone='ink'] img[data-tone='ink'],
+.lockup[data-tone='white'] img[data-tone='white'] {
+  display: block;
+}
+
+.wordA img {
   height: max(13px, calc(var(--mark-h) * 0.52));
-  aspect-ratio: 595 / 125;
-  -webkit-mask-image: var(--word-a);
-  mask-image: var(--word-a);
 }
 
 .wordB {
-  height: max(6.5px, calc(var(--mark-h) * 0.137));
-  aspect-ratio: 545 / 33;
   margin: max(3px, calc(var(--mark-h) * 0.05)) 0 0 calc(var(--mark-h) * 0.18);
-  -webkit-mask-image: var(--word-b);
-  mask-image: var(--word-b);
+}
+
+.wordB img {
+  height: max(6.5px, calc(var(--mark-h) * 0.137));
 }

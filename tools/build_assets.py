@@ -718,14 +718,21 @@ def build_lettering():
         bx0, bx1 = max(0, xs.min() - pad), xs.max() + pad + 1
         by0, by1 = max(0, ys.min() - pad), ys.max() + pad + 1
         crop = reg[by0:by1, bx0:bx1]
-        out = np.zeros((crop.shape[0], crop.shape[1], 4), np.uint8)
-        out[:, :, :3] = 255
-        out[:, :, 3] = (crop * 255).astype(np.uint8)
-        Image.fromarray(out, "RGBA").save(os.path.join(d, name))
-        print(f"  {os.path.relpath(os.path.join(d, name), ROOT)}  {crop.shape[1]}x{crop.shape[0]}")
+        # two colourings, so the site can show the lettering in ink over light chapters and in
+        # white over dark ones with plain <img> elements (no CSS masks, nothing to resolve)
+        for tone, rgb in (("ink", (10, 10, 11)), ("white", (255, 255, 255))):
+            out = np.zeros((crop.shape[0], crop.shape[1], 4), np.uint8)
+            out[:, :, 0], out[:, :, 1], out[:, :, 2] = rgb
+            out[:, :, 3] = (crop * 255).astype(np.uint8)
+            path = os.path.join(d, f"{name}-{tone}.png")
+            Image.fromarray(out, "RGBA").save(path, optimize=True)
+            print(f"  {os.path.relpath(path, ROOT)}  {crop.shape[1]}x{crop.shape[0]}")
+        for stale in (os.path.join(d, f"{name}.png"),):
+            if os.path.exists(stale):
+                os.remove(stale)
 
-    band(560, 690, 505, 1120, "word-aivinci.png")
-    band(700, 740, 530, 1120, "word-studios.png")
+    band(560, 690, 505, 1120, "word-aivinci")
+    band(700, 740, 530, 1120, "word-studios")
 
 
 # ---------------------------------------------------------------- founder portrait

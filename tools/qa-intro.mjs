@@ -5,7 +5,7 @@ const W = +(process.argv[2] || 1280), H = +(process.argv[3] || 800); await pg.se
 const errors = []
 pg.on('pageerror', (e) => errors.push(e.message))
 pg.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
-await pg.goto('http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' })
+await pg.goto(process.env.QA_URL || 'http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' })
 const log = await pg.evaluate(() => new Promise((resolve) => {
   const log = []; const t0 = performance.now()
   const iv = setInterval(() => {
