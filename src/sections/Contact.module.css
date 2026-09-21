@@ -149,10 +149,12 @@
   will-change: letter-spacing, opacity, filter;
 }
 
+/* sits in the gap between REALITY (ends ~62%) and the contact column (starts at 73%) */
 .beyond {
   position: absolute;
-  left: 66.8%;
+  left: 63%;
   top: 47.6%;
+  max-width: 9.5%;
   display: inline-flex;
   align-items: center;
   gap: 0.9cqw;
@@ -162,7 +164,8 @@
 }
 
 .beyondLine {
-  width: 3cqw;
+  width: 2.2cqw;
+  flex: none;
   height: 1px;
   background: rgba(255, 255, 255, 0.7);
 }
