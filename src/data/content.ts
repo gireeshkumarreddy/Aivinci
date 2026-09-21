@@ -24,12 +24,13 @@ export const brand = {
   ] as const,
 }
 
+/** header, mobile menu and footer order (as requested by the client) */
 export const nav = [
   { id: 'home', label: 'Home' },
+  { id: 'approach', label: 'About' },
   { id: 'services', label: 'Services' },
   { id: 'work', label: 'Work' },
   { id: 'products', label: 'Products' },
-  { id: 'approach', label: 'About' },
   { id: 'contact', label: 'Contact' },
 ] as const
 
