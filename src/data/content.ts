@@ -177,15 +177,10 @@ export const workMedia = {
   heading: ['Explore', 'What’s Next.'],
   marker: '05',
   description: 'Aivinci develops original digital products that combine technology, intelligence and real-world utility.',
-  /** the studio portrait supplied with the client feedback ("Founder portrait.jpg") */
-  studio: {
-    label: 'The Studio',
-    hint: 'Ideas · Stories · Products · People',
-    heading: ['Ideas, stories,', 'products, people.'],
-    side: ['Film', 'Technology', 'Creative business'],
-    caption: 'A brighter tomorrow.',
-    image: 'founder',
-    alt: 'Dhinesh Ravi of Aivinci Creative Studio at his desk — "I don’t follow the future. I build with it."',
+  /** the founder frame supplied by Aivinci ("person image.PNG") — its copy is part of the artwork */
+  founder: {
+    image: 'founder-frame',
+    alt: 'The founder — Dhinesh Ravi, entrepreneur, creator, product builder — at his desk in the Aivinci studio',
   },
 }
 

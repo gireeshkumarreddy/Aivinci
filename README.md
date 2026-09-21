@@ -75,9 +75,10 @@ Every other media area (service cards, work tiles, the product film, the hero fe
 `MediaSlot` without `src` renders as a plain photograph (no player affordance); pass a `src` and it becomes
 a live video without touching the layout.
 
-The `founder` step prepares the studio portrait supplied with the client feedback (`Founder portrait.jpg`
-in the reference folder) for "The Studio" block of the Products chapter (JPEG + WebP, desktop + phone);
-`clients` still builds the earlier portrait cards should they be needed again.
+The `founder` step prepares the wide founder frame supplied by Aivinci (`person image.PNG` in the
+reference folder) for the Products chapter (JPEG + WebP, desktop + phone): it runs full width with its
+edges dissolved into the chapter, its copy is part of the artwork. `clients` still builds the earlier
+portrait cards should they be needed again.
 
 ## Motion
 

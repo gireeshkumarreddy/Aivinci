@@ -735,10 +735,11 @@ def build_lettering():
     band(700, 740, 530, 1120, "word-studios")
 
 
-# ---------------------------------------------------------------- founder portrait
-# The poster supplied with the client feedback ("Founder portrait.jpg", 1024 x 1536) replaces the
-# three client portraits: a desktop and a phone rendition, JPEG + WebP each, nothing cropped.
-FOUNDER = "Founder portrait.jpg"
+# ---------------------------------------------------------------- founder frame
+# The wide founder frame supplied by Aivinci ("person image.PNG", 1672 x 941): a desktop
+# rendition at the reference frame size and a lighter phone rendition, JPEG + WebP each. The
+# page blends its edges into the chapter so it reads as a continuation of the scene.
+FOUNDER = "person image.PNG"
 
 
 def build_founder():
@@ -746,14 +747,53 @@ def build_founder():
     src = os.path.join(SRC, FOUNDER)
     if not os.path.exists(src):
         raise SystemExit(f"missing {src}")
-    out = ensure("clients")
+    out = ensure("studio")
     im = Image.open(src).convert("RGB")
-    for w, suffix in ((1024, ""), (640, "-sm")):
+    for w, suffix in ((1672, ""), (1000, "-sm")):
         r = im if im.width <= w else im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
-        jpg = os.path.join(out, f"founder{suffix}.jpg")
+        jpg = os.path.join(out, f"founder-frame{suffix}.jpg")
         r.save(jpg, "JPEG", quality=86, optimize=True, progressive=True)
         r.save(jpg[:-4] + ".webp", "WEBP", quality=84, method=6)
         print(f"  {os.path.relpath(jpg, ROOT)}  {r.width}x{r.height}  {os.path.getsize(jpg)//1024} KB / webp {os.path.getsize(jpg[:-4] + '.webp')//1024} KB")
+
+
+# ---------------------------------------------------------------- logo lettering
+# The studio's logo artwork ("Logo lockup 2026.webp"): the "Aivinci" lettering and the CREATIVE
+# STUDIOS line are lifted as alpha masks so the site can colour them (ink on paper, white over
+# dark chapters). The metallic mark keeps using the three pieces from the HD production asset.
+LOGO_LOCKUP = "Logo lockup 2026.webp"
+
+
+def build_lettering():
+    from PIL import Image
+    src = os.path.join(SRC, LOGO_LOCKUP)
+    if not os.path.exists(src):
+        raise SystemExit(f"missing {src}")
+    d = ensure("logo")
+    a = np.asarray(Image.open(src).convert("L")).astype(np.float32)
+    alpha_full = np.clip((222 - a) / 150.0, 0, 1)
+
+    def band(y0, y1, x0, x1, name, pad=4):
+        reg = alpha_full[y0:y1, x0:x1]
+        ys, xs = np.where(reg > 0.35)
+        bx0, bx1 = max(0, xs.min() - pad), xs.max() + pad + 1
+        by0, by1 = max(0, ys.min() - pad), ys.max() + pad + 1
+        crop = reg[by0:by1, bx0:bx1]
+        # two colourings, so the site can show the lettering in ink over light chapters and in
+        # white over dark ones with plain <img> elements (no CSS masks, nothing to resolve)
+        for tone, rgb in (("ink", (10, 10, 11)), ("white", (255, 255, 255))):
+            out = np.zeros((crop.shape[0], crop.shape[1], 4), np.uint8)
+            out[:, :, 0], out[:, :, 1], out[:, :, 2] = rgb
+            out[:, :, 3] = (crop * 255).astype(np.uint8)
+            path = os.path.join(d, f"{name}-{tone}.png")
+            Image.fromarray(out, "RGBA").save(path, optimize=True)
+            print(f"  {os.path.relpath(path, ROOT)}  {crop.shape[1]}x{crop.shape[0]}")
+        for stale in (os.path.join(d, f"{name}.png"),):
+            if os.path.exists(stale):
+                os.remove(stale)
+
+    band(560, 690, 505, 1120, "word-aivinci")
+    band(700, 740, 530, 1120, "word-studios")
 
 
 # ---------------------------------------------------------------- webp companions

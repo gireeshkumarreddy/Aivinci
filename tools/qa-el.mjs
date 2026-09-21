@@ -24,7 +24,7 @@ for (const w of widths.split(',').map(Number)) {
   const errors = []
   pg.on('pageerror', (e) => errors.push(e.message))
   pg.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
-  await pg.goto('http://127.0.0.1:5173/' + (live ? '' : '?settled'), { waitUntil: 'networkidle0' })
+  await pg.goto((process.env.QA_URL || 'http://127.0.0.1:5173/') + (live ? '' : '?settled'), { waitUntil: 'networkidle0' })
   await pg.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto' })
   await pg.evaluate(() => document.fonts.ready)
   await new Promise((r) => setTimeout(r, live ? 6500 : 500))
