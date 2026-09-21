@@ -25,7 +25,8 @@ src/
   data/content.ts           every approved string on the site (single source of truth), incl. the studio's channels
   lib/motion.ts             beat() = one row of an animation table; useSectionReveal, pointer tilt, reduced motion
   lib/homography.ts         projective map used to seat the live product UI on the photographed phone
-  components/layout/        Header (one live global header), LogoLockup (shared by intro + header)
+  components/layout/        Header (one live global header), LogoLockup (shared by intro, header + footer;
+                            the lettering is the supplied logo artwork carried as alpha masks)
   components/ui/            Button, MediaSlot (video-ready container), Handwriting (draw-on copy), editorial bits
   components/product/       PhoneInHand (layered raster + live screen), ZynnectScreen (real HTML product UI)
   sections/                 00 Intro · 02 Hero · 03 ServicesIntro · 04 ServicesGrid · 05 Approach · 06 Work

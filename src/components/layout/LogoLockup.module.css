@@ -1,7 +1,10 @@
+/* The lockup's proportions follow the supplied logo artwork: with the mark 1 unit tall, the
+   "Aivinci" lettering is 0.52 tall and 2.47 wide, CREATIVE STUDIOS 0.137 tall and 2.26 wide,
+   set a little below the mark's centre line. */
 .lockup {
   display: inline-flex;
   align-items: center;
-  gap: calc(var(--mark-h) * 0.3);
+  gap: calc(var(--mark-h) * 0.1);
   color: var(--ink);
   white-space: nowrap;
   user-select: none;
@@ -30,51 +33,33 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  line-height: 1;
-  gap: calc(var(--mark-h) * 0.12);
+  /* the artwork seats the lettering slightly below the mark's middle */
+  padding-top: calc(var(--mark-h) * 0.08);
+  color: inherit;
 }
 
-.name {
-  font-family: var(--font-brand);
-  font-size: calc(var(--mark-h) * 0.5);
-  letter-spacing: -0.035em;
-  line-height: 1;
-  white-space: nowrap;
+/* the logo's own lettering, as alpha masks filled with the current text colour */
+.wordA,
+.wordB {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
-/* compact: the studio name stacks under "Aivinci" */
-.stacked {
-  display: flex;
-  flex-direction: column;
-  gap: 0.08em;
+.wordA {
+  height: max(13px, calc(var(--mark-h) * 0.52));
+  aspect-ratio: 595 / 125;
+  -webkit-mask-image: var(--word-a);
+  mask-image: var(--word-a);
 }
 
-.stacked .nameB {
-  font-size: 0.72em;
-  letter-spacing: 0.02em;
-}
-
-.nameA {
-  font-weight: 800;
-}
-
-.nameB {
-  font-weight: 400;
-}
-
-.tagline {
-  display: inline-flex;
-  gap: 0.6em;
-  font-family: var(--font-brand);
-  font-weight: 600;
-  font-size: max(6.5px, calc(var(--mark-h) * 0.155));
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--ink);
-  opacity: 0.85;
-  white-space: nowrap;
-}
-
-.dot {
-  margin-right: 0.6em;
+.wordB {
+  height: max(6.5px, calc(var(--mark-h) * 0.137));
+  aspect-ratio: 545 / 33;
+  margin: max(3px, calc(var(--mark-h) * 0.05)) 0 0 calc(var(--mark-h) * 0.18);
+  -webkit-mask-image: var(--word-b);
+  mask-image: var(--word-b);
 }

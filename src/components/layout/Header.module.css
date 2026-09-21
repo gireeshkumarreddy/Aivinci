@@ -73,10 +73,6 @@
   color: var(--hdr-fg);
 }
 
-.header[data-theme='dark'] .brand :global([data-lockup-tagline]) {
-  color: var(--white);
-}
-
 /* the intro owns the brand until the logo has locked in */
 .header[data-locked='false'] .brand {
   visibility: hidden;

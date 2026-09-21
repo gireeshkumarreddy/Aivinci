@@ -7,14 +7,10 @@ import { asset } from '../../lib/assets'
 export const MARK_RATIO = 651 / 412
 
 interface Props {
-  /** mark height in px */
+  /** mark height in px — every other dimension of the lockup follows it */
   markHeight?: number
-  /** show the letter-spaced tagline under the wordmark */
-  tagline?: boolean
   /** hide the wordmark (mark only) */
   wordmark?: boolean
-  /** "Creative Studio" on its own line under "Aivinci" (compact header widths) */
-  stacked?: boolean
   className?: string
   style?: CSSProperties
   /** the intro renders the same lockup and moves it into place */
@@ -22,21 +18,28 @@ interface Props {
 }
 
 /**
- * The Aivinci brand lockup: the metallic mark (three physical pieces) beside the
- * wordmark. The header and the opening animation share this exact component so
- * the logo that travels *is* the logo that stays.
+ * The Aivinci brand lockup, as supplied by the studio: the metallic mark (three physical
+ * pieces) beside the "Aivinci" lettering with CREATIVE STUDIOS underneath. The lettering is the
+ * logo's own artwork, carried as alpha masks so it takes the colour of its surroundings (ink on
+ * paper, white over dark chapters). The header and the opening animation share this exact
+ * component so the logo that travels *is* the logo that stays.
  */
-export const LogoLockup = forwardRef<HTMLDivElement, Props>(function LogoLockup(
-  { markHeight = 50, tagline = true, wordmark = true, stacked = false, className, style, id },
-  ref,
-) {
+export const LogoLockup = forwardRef<HTMLDivElement, Props>(function LogoLockup({ markHeight = 50, wordmark = true, className, style, id }, ref) {
   const markW = Math.round(markHeight * MARK_RATIO)
   return (
     <div
       ref={ref}
       id={id}
       className={[styles.lockup, className].filter(Boolean).join(' ')}
-      style={{ '--mark-h': `${markHeight}px`, '--mark-w': `${markW}px`, ...style } as CSSProperties}
+      style={
+        {
+          '--mark-h': `${markHeight}px`,
+          '--mark-w': `${markW}px`,
+          '--word-a': `url(${asset('/assets/logo/word-aivinci.png')})`,
+          '--word-b': `url(${asset('/assets/logo/word-studios.png')})`,
+          ...style,
+        } as CSSProperties
+      }
     >
       <span className={styles.mark} data-lockup-mark aria-hidden="true">
         <img className={styles.piece} src={asset('/assets/logo/mark-tri.png')} alt="" width={651} height={412} data-piece="tri" draggable={false} />
@@ -44,20 +47,9 @@ export const LogoLockup = forwardRef<HTMLDivElement, Props>(function LogoLockup(
         <img className={styles.piece} src={asset('/assets/logo/mark-sphere.png')} alt="" width={651} height={412} data-piece="sphere" draggable={false} />
       </span>
       {wordmark && (
-        <span className={styles.word} data-lockup-word>
-          <span className={[styles.name, stacked ? styles.stacked : ''].filter(Boolean).join(' ')}>
-            <span className={styles.nameA}>{brand.nameA}</span> <span className={styles.nameB}>{brand.nameB}</span>
-          </span>
-          {tagline && (
-            <span className={styles.tagline} data-lockup-tagline>
-              {brand.tagline.map((t, i) => (
-                <span key={t}>
-                  {i > 0 && <span className={styles.dot}>·</span>}
-                  {t}
-                </span>
-              ))}
-            </span>
-          )}
+        <span className={styles.word} data-lockup-word aria-hidden="true">
+          <span className={styles.wordA} />
+          <span className={styles.wordB} />
         </span>
       )}
       <span className="sr-only">{brand.name}</span>

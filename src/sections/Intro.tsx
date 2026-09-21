@@ -232,7 +232,7 @@ export function Intro({ onLock, onHandoff, onDone }: Props) {
         <img src={asset('/assets/logo/mark-shadow.png')} alt="" width={670} height={100} draggable={false} />
       </span>
       <div className={styles.lockupWrap} data-placed={placed ? 'true' : 'false'}>
-        <LogoLockup ref={lockup} markHeight={isMobile ? 34 : 50} tagline={!isMobile} />
+        <LogoLockup ref={lockup} markHeight={isMobile ? 38 : 52} />
       </div>
     </div>
   )

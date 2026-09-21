@@ -36,7 +36,7 @@ export function Footer() {
             }}
             aria-label={`${brand.name} — back to the top`}
           >
-            <LogoLockup markHeight={44} tagline={false} stacked />
+            <LogoLockup markHeight={48} />
           </a>
           <p className={`${styles.statement} t-headline-light`}>
             <span>{c.statement[0]}</span>

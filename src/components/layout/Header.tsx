@@ -155,7 +155,7 @@ export function Header({ locked, ready }: Props) {
           }}
           aria-label={`${brand.name} — home`}
         >
-          <LogoLockup markHeight={isMobile ? 36 : isNarrowDesktop ? 42 : 50} tagline={!isMobile && !isNarrowDesktop} stacked={isMobile || isNarrowDesktop} />
+          <LogoLockup markHeight={isMobile ? 38 : isNarrowDesktop ? 44 : 52} />
         </a>
 
         <nav ref={navRef} className={styles.nav} data-hdr="nav" aria-label="Primary">
