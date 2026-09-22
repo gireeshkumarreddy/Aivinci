@@ -1,68 +1,17 @@
-/* The lockup's proportions follow the supplied logo artwork: with the mark 1 unit tall, the
-   "Aivinci" lettering is 0.52 tall and 2.47 wide, CREATIVE STUDIOS 0.137 tall and 2.26 wide,
-   set a little below the mark's centre line. */
+/* The logo is one piece of artwork; only its height is set, the rest follows the render. */
 .lockup {
-  display: inline-flex;
-  align-items: center;
-  gap: calc(var(--mark-h) * 0.1);
-  white-space: nowrap;
+  display: block;
+  width: var(--lockup-w);
+  height: var(--lockup-h);
+  flex: none;
   user-select: none;
 }
 
-.mark {
-  position: relative;
+.art {
   display: block;
-  width: var(--mark-w);
-  height: var(--mark-h);
-  flex: none;
-  transform-style: preserve-3d;
-}
-
-.piece {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  will-change: transform, opacity, filter;
-  transform-origin: 50% 60%;
-}
-
-.word {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  /* the artwork seats the lettering slightly below the mark's middle */
-  padding-top: calc(var(--mark-h) * 0.08);
-}
-
-/* the logo's own lettering: one image per colouring, the lockup's tone decides which shows */
-.wordA,
-.wordB {
-  display: block;
-  line-height: 0;
-}
-
-.wordA img,
-.wordB img {
-  display: none;
-  width: auto;
   -webkit-user-drag: none;
-}
-
-.lockup[data-tone='ink'] img[data-tone='ink'],
-.lockup[data-tone='white'] img[data-tone='white'] {
-  display: block;
-}
-
-.wordA img {
-  height: max(13px, calc(var(--mark-h) * 0.52));
-}
-
-.wordB {
-  margin: max(3px, calc(var(--mark-h) * 0.05)) 0 0 calc(var(--mark-h) * 0.18);
-}
-
-.wordB img {
-  height: max(6.5px, calc(var(--mark-h) * 0.137));
+  will-change: transform, opacity, filter;
 }

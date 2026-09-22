@@ -1,8 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { LogoLockup, MARK_RATIO } from '../components/layout/LogoLockup'
+import { LogoLockup, LOCKUP_RATIO } from '../components/layout/LogoLockup'
 import { EASE, gsap, useMedia, useReducedMotion } from '../lib/motion'
 import styles from './Intro.module.css'
-import { asset } from '../lib/assets'
 
 interface Props {
   /** fired at 3500 ms — the logo has locked into the header */
@@ -13,13 +12,11 @@ interface Props {
   onDone: () => void
 }
 
-/** Sphere position of the mark inside its box (from the HD asset geometry). */
-const SPHERE = { cx: 0.648, cy: 0.218, r: 0.192 } // r relative to box height
-
 /**
  * 00 / OPENING LOGO ANIMATION — 5-second brand reveal.
- * White canvas → spheres/lines awaken → connection → metallic form assembles from
- * depth → the mark resolves → the lockup travels CENTRE → UPPER-LEFT → header lock.
+ * White canvas → elements awaken → they connect into an orbital system → the logo resolves out
+ * of that light → the lockup travels CENTRE → UPPER-LEFT and locks into the header. The logo is
+ * the studio's artwork, whole: nothing is assembled from pieces.
  */
 export function Intro({ onLock, onHandoff, onDone }: Props) {
   const root = useRef<HTMLDivElement>(null)
@@ -53,10 +50,8 @@ export function Intro({ onLock, onHandoff, onDone }: Props) {
         /* fonts are optional for the choreography */
       }
       if (cancelled) return
-      const headerBrand = document.querySelector<HTMLElement>('[data-header-brand] [data-lockup-mark]')
-      const headerWord = document.querySelector<HTMLElement>('[data-header-brand] [data-lockup-word]')
-      const headerLockup = document.querySelector<HTMLElement>('[data-header-brand] > div')
-      if (!headerBrand || !headerWord || !headerLockup) return
+      const headerLockup = document.querySelector<HTMLElement>('[data-header-brand] [data-lockup]')
+      if (!headerLockup) return
 
       // 1. seat the intro lockup exactly where the header lockup lives
       const hr = headerLockup.getBoundingClientRect()
@@ -65,45 +60,20 @@ export function Intro({ onLock, onHandoff, onDone }: Props) {
       await new Promise((r) => requestAnimationFrame(r))
       if (cancelled) return
 
-      const mark = lk.querySelector<HTMLElement>('[data-lockup-mark]')!
-      const word = lk.querySelector<HTMLElement>('[data-lockup-word]')!
-      const pieces = {
-        tri: mark.querySelector<HTMLElement>('[data-piece="tri"]')!,
-        slab: mark.querySelector<HTMLElement>('[data-piece="slab"]')!,
-        sphere: mark.querySelector<HTMLElement>('[data-piece="sphere"]')!,
-      }
-      const mr = mark.getBoundingClientRect()
-      const wr = word.getBoundingClientRect()
+      const art = lk.querySelector<HTMLElement>('img')!
       const vw = window.innerWidth
       const vh = window.innerHeight
-      // centre composition (frame 05): mark above, wordmark beneath
-      const S = Math.min(isMobile ? 2.1 : 2.75, (vw * 0.5) / mr.width)
-      const SW = Math.min(isMobile ? 1.55 : 1.9, (vw * 0.8) / wr.width)
+      // centre composition: the logo at poster scale, optically centred
+      const S = Math.min(isMobile ? 3.2 : 4.6, (vw * (isMobile ? 0.88 : 0.66)) / hr.width)
       const cx = vw / 2
-      const cy = vh * (isMobile ? 0.44 : 0.46)
-      const markCentreY = cy - (S * mr.height) * 0.12
-      const markStart = {
-        x: cx - (S * mr.width) / 2 - mr.left,
-        y: markCentreY - (S * mr.height) / 2 - mr.top,
+      const cy = vh * (isMobile ? 0.46 : 0.47)
+      const start = {
+        x: cx - (S * hr.width) / 2 - hr.left,
+        y: cy - (S * hr.height) / 2 - hr.top,
         scale: S,
       }
-      const wordStart = {
-        x: cx - (SW * wr.width) / 2 - wr.left,
-        y: markCentreY + (S * mr.height) / 2 + (isMobile ? 26 : 38) - wr.top,
-        scale: SW,
-      }
-      gsap.set([mark, word], { transformOrigin: '0 0' })
-      gsap.set(mark, markStart)
-      gsap.set(word, wordStart)
-      gsap.set(word, { opacity: 0 })
-      gsap.set([pieces.tri, pieces.slab, pieces.sphere], { opacity: 0 })
+      gsap.set(lk, { transformOrigin: '0 0', ...start, opacity: 0 })
 
-      // where the mark's sphere sits on screen at the centred scale (for the metallic sphere hand-off)
-      const sphereScreen = {
-        x: cx - (S * mr.width) / 2 + SPHERE.cx * S * mr.width,
-        y: markCentreY - (S * mr.height) / 2 + SPHERE.cy * S * mr.height,
-        r: SPHERE.r * S * mr.height,
-      }
       const scene = el.querySelector<HTMLElement>('[data-scene]')!
       const core = el.querySelector<HTMLElement>('[data-core]')!
       const orbit = el.querySelector<HTMLElement>('[data-orbit]')!
@@ -111,15 +81,13 @@ export function Intro({ onLock, onHandoff, onDone }: Props) {
       const sats = Array.from(el.querySelectorAll<SVGCircleElement>('[data-sat]'))
       const axis = el.querySelector<SVGLineElement>('[data-axis]')!
       const elements = Array.from(el.querySelectorAll<HTMLElement>('[data-element]'))
-      const shadow = el.querySelector<HTMLElement>('[data-shadow]')!
-      const coreSize = Math.max(sphereScreen.r * 2, 56)
-      gsap.set(scene, { x: cx, y: markCentreY + (isMobile ? 10 : 20) })
+      const coreSize = Math.max(S * hr.height * 0.42, 56)
+      gsap.set(scene, { x: cx, y: cy })
       gsap.set(core, { width: coreSize, height: coreSize, xPercent: -50, yPercent: -50, opacity: 0, scale: 0.3, filter: 'blur(14px)' })
       gsap.set(orbit, { opacity: 0 })
       gsap.set(rings, { strokeDasharray: 1, strokeDashoffset: 1 })
       gsap.set(sats, { opacity: 0, scale: 0, transformOrigin: '50% 50%' })
       gsap.set(axis, { scaleY: 0, transformOrigin: '50% 50%', opacity: 0 })
-      gsap.set(shadow, { x: cx, y: markCentreY + (S * mr.height) / 2 + (isMobile ? 6 : 10), xPercent: -50, yPercent: -50, opacity: 0, width: S * mr.width * 1.1 })
 
       const tl = gsap.timeline({ defaults: { ease: EASE.cine } })
 
@@ -134,9 +102,9 @@ export function Intro({ onLock, onHandoff, onDone }: Props) {
         tl.fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: EASE.cine }, t0 + 0.18)
       })
       // connection creates motion: the elements drift toward the forming system
-      tl.to(elements, { x: (i) => [ -22, 18, -14, 20 ][i % 4], y: (i) => [ 10, 14, -12, -8 ][i % 4], duration: 0.7, ease: EASE.inOut, stagger: 0.04 }, 0.8)
+      tl.to(elements, { x: (i) => [-22, 18, -14, 20][i % 4], y: (i) => [10, 14, -12, -8][i % 4], duration: 0.7, ease: EASE.inOut, stagger: 0.04 }, 0.8)
 
-      // ---- 700–1800 ms  Central form: metallic form assembles from depth
+      // ---- 700–1800 ms  Central form: a metallic core assembles from depth
       tl.to(core, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.9, ease: EASE.settle }, 0.7)
       tl.to(orbit, { opacity: 1, duration: 0.4 }, 0.9)
       tl.to(rings, { strokeDashoffset: 0, duration: 0.8, ease: EASE.inOut, stagger: 0.12 }, 0.95)
@@ -144,27 +112,26 @@ export function Intro({ onLock, onHandoff, onDone }: Props) {
       tl.to(sats, { opacity: 1, scale: 1, duration: 0.4, stagger: 0.08, ease: EASE.settle }, 1.15)
       tl.to(orbit, { rotation: 38, duration: 1.7, ease: EASE.inOut }, 0.9)
 
-      // ---- 1500–2500 ms  Logo resolve: the brand mark forms
+      // ---- 1500–2500 ms  Logo resolve: the artwork forms out of that light, whole
       tl.to(elements, { opacity: 0, scale: 0.6, duration: 0.45, ease: EASE.soft, stagger: 0.04 }, 1.5)
-      // the metallic core travels to the sphere slot and becomes the sphere piece
-      tl.to(core, { x: sphereScreen.x - cx, y: sphereScreen.y - (markCentreY + (isMobile ? 10 : 20)), width: sphereScreen.r * 2, height: sphereScreen.r * 2, duration: 0.55, ease: EASE.inOut }, 1.55)
-      tl.fromTo(pieces.tri, { opacity: 0, scale: 0.86, x: -40 * S, filter: 'blur(10px)' }, { opacity: 1, scale: 1, x: 0, filter: 'blur(0px)', duration: 0.7, ease: EASE.settle }, 1.65)
-      tl.fromTo(pieces.slab, { opacity: 0, scale: 0.86, x: 40 * S, filter: 'blur(10px)' }, { opacity: 1, scale: 1, x: 0, filter: 'blur(0px)', duration: 0.7, ease: EASE.settle }, 1.78)
-      tl.to(pieces.sphere, { opacity: 1, duration: 0.25, ease: 'none' }, 2.05)
-      tl.to(core, { opacity: 0, duration: 0.25, ease: 'none' }, 2.1)
-      tl.to(shadow, { opacity: 1, duration: 0.6 }, 1.9)
+      tl.to(core, { scale: 2.6, opacity: 0, filter: 'blur(26px)', duration: 0.8, ease: EASE.settle }, 1.6)
+      tl.fromTo(
+        lk,
+        { opacity: 0, scale: S * 0.86, filter: 'blur(16px) brightness(1.5)' },
+        { opacity: 1, scale: S, filter: 'blur(0px) brightness(1)', duration: 0.8, ease: EASE.settle },
+        1.6,
+      )
+      tl.fromTo(art, { y: 18 }, { y: 0, duration: 0.8, ease: EASE.settle }, 1.6)
       tl.to(rings, { strokeDashoffset: 1, duration: 0.5, ease: EASE.inOut, stagger: 0.06 }, 2.05)
       tl.to(sats, { opacity: 0, scale: 0, duration: 0.35, stagger: 0.04 }, 2.05)
       tl.to(axis, { opacity: 0, scaleY: 0, duration: 0.3 }, 2.1)
       tl.to(orbit, { opacity: 0, duration: 0.3 }, 2.25)
-      tl.fromTo(word, { opacity: 0, y: wordStart.y + 14 }, { opacity: 1, y: wordStart.y, duration: 0.5, ease: EASE.settle }, 2.05)
 
-      // ---- 2300–3500 ms  Logo travel: CENTRE → UPPER-LEFT, scaling down, smooth ease-out
-      tl.to(shadow, { opacity: 0, duration: 0.3 }, 2.3)
-      tl.to(mark, { x: 0, y: 0, scale: 1, duration: 1.2, ease: EASE.cine }, 2.3)
-      tl.to(word, { x: 0, y: 0, scale: 1, duration: 1.2, ease: EASE.cine }, 2.3)
+      // ---- 2400–2750 ms  the brand holds at poster scale, then
+      // ---- 2750–3500 ms  Logo travel: CENTRE → UPPER-LEFT, scaling down, smooth ease-out
+      tl.to(lk, { x: 0, y: 0, scale: 1, duration: 0.75, ease: EASE.cine }, 2.75)
 
-      // ---- 3500–4000 ms  Header lock: the header takes over the same asset
+      // ---- 3500–4000 ms  Header lock: the header takes over the same artwork
       tl.call(() => onLock(), [], 3.5)
       // ---- 4000–5000 ms  Homepage handoff
       tl.call(() => onHandoff(), [], 4.0)
@@ -228,14 +195,11 @@ export function Intro({ onLock, onHandoff, onDone }: Props) {
         </div>
         <span className={styles.core} data-core />
       </div>
-      <span className={styles.shadow} data-shadow>
-        <img src={asset('/assets/logo/mark-shadow.png')} alt="" width={670} height={100} draggable={false} />
-      </span>
       <div className={styles.lockupWrap} data-placed={placed ? 'true' : 'false'}>
-        <LogoLockup ref={lockup} markHeight={isMobile ? 38 : 52} tone="ink" />
+        <LogoLockup ref={lockup} height={isMobile ? 44 : 58} tone="ink" eager />
       </div>
     </div>
   )
 }
 
-export { MARK_RATIO }
+export { LOCKUP_RATIO }

@@ -26,7 +26,7 @@ src/
   lib/motion.ts             beat() = one row of an animation table; useSectionReveal, pointer tilt, reduced motion
   lib/homography.ts         projective map used to seat the live product UI on the photographed phone
   components/layout/        Header (one live global header), LogoLockup (shared by intro, header + footer;
-                            the lettering is the supplied logo artwork carried as alpha masks)
+                            the studio's logo artwork, used whole — never sliced)
   components/ui/            Button, MediaSlot (video-ready container), Handwriting (draw-on copy), editorial bits
   components/product/       PhoneInHand (layered raster + live screen), ZynnectScreen (real HTML product UI)
   sections/                 00 Intro · 02 Hero · 03 ServicesIntro · 04 ServicesGrid · 05 Approach · 06 Work
@@ -75,6 +75,11 @@ transfer) is reported and skipped in favour of the next source, so a broken uplo
 Every other media area (service cards, work tiles, the product film, the hero feature) is an image: a
 `MediaSlot` without `src` renders as a plain photograph (no player affordance); pass a `src` and it becomes
 a live video without touching the layout.
+
+The `logo` step cuts the studio's logo (`Logo lockup 2026b.png`) out of its studio backdrop — dropping the
+floor reflection it stands on — as `lockup.png` plus `lockup-white.png` (the CREATIVE STUDIOS line set in
+white for dark chapters), and derives the favicons from the mark. The site never slices the logo: the
+header, the opening animation and the footer render that one image.
 
 The `founder` step prepares the wide founder frame supplied by Aivinci (`person image.PNG` in the
 reference folder) for the Products chapter (JPEG + WebP, desktop + phone): it runs full width with its

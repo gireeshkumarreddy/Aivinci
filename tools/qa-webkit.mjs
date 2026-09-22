@@ -21,7 +21,7 @@ const info = await p.evaluate(() => {
   const q = (s) => document.querySelector(s)
   const r = (e) => e && e.getBoundingClientRect().toJSON()
   return {
-    word: r(q('[data-header-brand] [data-lockup-word]')),
+    logo: r(q('[data-header-brand] [data-lockup]')),
     box: q('[data-ph="phone"]') && { transform: getComputedStyle(q('[data-ph="phone"]').parentElement).transform, s: q('[data-ph="phone"]').parentElement.parentElement.style.getPropertyValue('--s'), outer: r(q('[data-ph="phone"]').parentElement.parentElement), phone: r(q('[data-ph="phone"]')) },
     installation: r(q('#contact [class*="installation"]')), people: r(q('[data-ct="people"]')), reality: r(q('[data-ct="reality"]')), beyond: r(q('#contact p[class*="beyond"]')),
   }

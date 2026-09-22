@@ -13,7 +13,7 @@ const log = await pg.evaluate(() => new Promise((resolve) => {
     const intro = document.querySelector('[class*="intro"][aria-hidden="true"]')
     const heroChar = document.querySelector('[data-hero="character"]')
     const nav = document.querySelector('[data-hdr="nav"]')
-    const introMark = document.querySelector('[class*="lockupWrap"] [data-lockup-mark]')
+    const introMark = document.querySelector('[class*="lockupWrap"] [data-lockup]')
     const hand = document.querySelector('[data-hero="hand"] [data-hand-line]')
     const r = introMark ? introMark.getBoundingClientRect() : null
     log.push({ t: Math.round(performance.now() - t0), locked: h?.dataset.locked, ready: h?.dataset.ready, intro: intro ? getComputedStyle(intro).opacity : 'gone', hero: heroChar ? getComputedStyle(heroChar).opacity : null, nav: nav ? getComputedStyle(nav).opacity : null, mark: r ? [Math.round(r.left), Math.round(r.top), Math.round(r.width)] : null, hand: hand ? hand.style.getPropertyValue('--p') : null })

@@ -164,48 +164,93 @@ def rim_light(alpha01, light_dir=(0.55, -0.83), width=7, blur=5, strength=1.0):
 
 
 # ----------------------------------------------------------------------------- logo
+# The studio's logo ("Logo lockup 2026b.png"): the red mark, the metallic "ivinci" lettering and
+# the CREATIVE STUDIOS line are one piece of artwork. It is used whole — cut out of its white
+# background, never sliced — in the header, the opening animation and the footer. A second
+# colouring recolours only the CREATIVE STUDIOS line white for dark chapters.
+LOGO_SRC = "Logo lockup 2026b.png"
+LOGO_CAPS_TOP = 680          # first row of the CREATIVE STUDIOS line in the source
+
+
 def build_logo():
     print("[logo]")
     d = ensure("logo")
-    im = load("logo")
-    g = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-    m = (g < 250).astype(np.uint8)
-    m[:, :450] = 0; m[:, 1100:] = 0; m[:190, :] = 0; m[640:, :] = 0
-    # the contact shadow touches the metal underside — keep only genuinely dark metal near the bottom
-    rows = np.arange(g.shape[0])[:, None]
-    m = np.where(rows >= 611, (g < 100).astype(np.uint8) & m, m).astype(np.uint8)
-    comp = fill_holes(largest_component(m), 4000)
-    core = cv2.erode(comp, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)))
-    dil = cv2.dilate(comp, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)))
-    edge_alpha = np.clip((253 - g.astype(np.float32)) / 60.0, 0, 1)
-    alpha = np.where(core > 0, 1.0, np.where(dil > 0, edge_alpha, 0.0))
-    full = rgba(im, alpha)
-    full, (x0, y0, x1, y1) = crop_alpha(full, pad=6)
-    save_png(os.path.join(d, "mark.png"), full)
+    src = os.path.join(SRC, LOGO_SRC)
+    if not os.path.exists(src):
+        raise SystemExit(f"missing {src}")
+    bgr = cv2.imread(src, cv2.IMREAD_COLOR)
+    lum = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY).astype(np.float32)
+    H, W = lum.shape
 
-    # split into the three physical pieces (disjoint regions -> any z-order recomposes exactly)
-    H, W = full.shape[:2]
-    yy, xx = np.mgrid[0:H, 0:W]
-    gx, gy = xx + x0, yy + y0
-    sphere = ((gx - 866) ** 2 + (gy - 299) ** 2) <= 79.5 ** 2
-    slab_line_x = 785 + 0.396 * (gy - 345)
-    slab = (gx > slab_line_x) & (gy > 330) & ~sphere
-    tri = ~sphere & ~slab
-    for name, region in (("mark-sphere", sphere), ("mark-slab", slab), ("mark-tri", tri)):
-        piece = full.copy()
-        piece[:, :, 3] = np.where(region, piece[:, :, 3], 0)
-        save_png(os.path.join(d, f"{name}.png"), piece)
-    # a soft contact shadow, isolated (used under the mark during the intro)
-    sh = im[600:700, 440:1110]
-    shg = cv2.cvtColor(sh, cv2.COLOR_BGR2GRAY).astype(np.float32)
-    sha = np.clip((252 - shg) / 130.0, 0, 1)
-    sha[:14, :] = 0  # drop the metal itself
-    sha = cv2.GaussianBlur(sha, (0, 0), 3)
-    shadow = np.zeros((sh.shape[0], sh.shape[1], 4), np.uint8)
-    shadow[:, :, 3] = (sha * 255 * 0.9).astype(np.uint8)
-    save_png(os.path.join(d, "mark-shadow.png"), shadow)
-    with open(os.path.join(d, "mark.json"), "w") as f:
-        json.dump({"w": W, "h": H}, f)
+    # The artwork is rendered standing on a studio floor: its own reflection must not travel with
+    # it. The solid forms are cut with a soft edge, then everything below each column's baseline
+    # is dropped; the CREATIVE STUDIOS line underneath is cut separately, tighter (it is flat type
+    # over the same reflection).
+    soft = np.clip((248.0 - lum) / 18.0, 0, 1)
+    body = np.zeros_like(soft)
+    body[:LOGO_CAPS_TOP] = soft[:LOGO_CAPS_TOP]
+
+    keep = (body > 0.08).astype(np.uint8)
+    n, labels, stats, _ = cv2.connectedComponentsWithStats(keep, 8)
+    for i in range(1, n):
+        if stats[i, cv2.CC_STAT_AREA] < 120:
+            keep[labels == i] = 0
+    # the metal's white highlights sit inside the shapes: fill the interiors so they stay opaque
+    inv = (1 - keep).astype(np.uint8)
+    nb, labb, _, _ = cv2.connectedComponentsWithStats(inv, 4)
+    border = set(labb[0, :]) | set(labb[-1, :]) | set(labb[:, 0]) | set(labb[:, -1])
+    filled = keep.copy()
+    for i in range(1, nb):
+        if i not in border:
+            filled[labb == i] = 1
+    alpha = np.maximum(body * keep, cv2.erode(filled, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))).astype(np.float32))
+
+    # per-column baseline: the lowest genuinely solid pixel of the forms themselves
+    solid = lum[:LOGO_CAPS_TOP] < 185
+    rows = np.arange(LOGO_CAPS_TOP)[:, None]
+    base = np.where(solid.any(axis=0), np.where(solid, rows, -1).max(axis=0), -1)
+    below = rows > (base[None, :] + 2)
+    alpha[:LOGO_CAPS_TOP][below] = 0
+
+    # the CREATIVE STUDIOS line
+    caps = np.clip((215.0 - lum[LOGO_CAPS_TOP:]) / 40.0, 0, 1)
+    alpha[LOGO_CAPS_TOP:] = caps
+
+    out = np.dstack([bgr, (np.clip(alpha, 0, 1) * 255).astype(np.uint8)])
+    out, (x0, y0, x1, y1) = crop_alpha(out, pad=2)
+    save_png(os.path.join(d, "lockup.png"), out)
+
+    # dark chapters: the CREATIVE STUDIOS line is set in white, the metal and the mark unchanged
+    white = out.copy()
+    band = white[max(0, LOGO_CAPS_TOP - y0):]
+    ink = cv2.cvtColor(band[:, :, :3], cv2.COLOR_BGR2GRAY) < 170
+    for c in range(3):
+        band[:, :, c][ink] = 255
+    save_png(os.path.join(d, "lockup-white.png"), white)
+
+    # the mark alone drives the favicons (a square of the red form)
+    mark, _ = crop_alpha(out[:, : max(1, int((520 - x0)))], pad=2)
+    side = int(max(mark.shape[:2]) * 1.08)
+    square = np.zeros((side, side, 4), np.uint8)
+    oy, ox = (side - mark.shape[0]) // 2, (side - mark.shape[1]) // 2
+    square[oy:oy + mark.shape[0], ox:ox + mark.shape[1]] = mark
+    for name, size in (("favicon.png", 256), ("apple-touch-icon.png", 180)):
+        icon = cv2.resize(square, (size, size), interpolation=cv2.INTER_AREA)
+        path = os.path.join(ROOT, "public", name)
+        cv2.imwrite(path, icon)
+        print(f"  {os.path.relpath(path, ROOT)}  {size}x{size}  {os.path.getsize(path)//1024} KB")
+
+    with open(os.path.join(d, "lockup.json"), "w") as f:
+        json.dump({"w": int(out.shape[1]), "h": int(out.shape[0])}, f)
+
+    # the previous logo's slices are gone for good
+    for stale in ("mark.png", "mark-tri.png", "mark-slab.png", "mark-sphere.png", "mark-shadow.png",
+                  "mark.json", "word-aivinci-ink.png", "word-aivinci-white.png",
+                  "word-studios-ink.png", "word-studios-white.png"):
+        p = os.path.join(d, stale)
+        if os.path.exists(p):
+            os.remove(p)
+            print(f"  removed {stale}")
 
 
 # ----------------------------------------------------------------------------- hero
@@ -713,45 +758,9 @@ def build_clients():
             print(f"  {os.path.relpath(jpg[:-4] + '.webp', ROOT)}  {os.path.getsize(jpg[:-4] + '.webp')//1024} KB")
 
 
-# ---------------------------------------------------------------- logo lettering
-# The studio's logo artwork ("Logo lockup 2026.webp"): the "Aivinci" lettering and the CREATIVE
-# STUDIOS line are lifted as alpha masks so the site can colour them (ink on paper, white over
-# dark chapters). The metallic mark keeps using the three pieces from the HD production asset.
-LOGO_LOCKUP = "Logo lockup 2026.webp"
-
-
-def build_lettering():
-    from PIL import Image
-    src = os.path.join(SRC, LOGO_LOCKUP)
-    if not os.path.exists(src):
-        raise SystemExit(f"missing {src}")
-    d = ensure("logo")
-    a = np.asarray(Image.open(src).convert("L")).astype(np.float32)
-    alpha_full = np.clip((222 - a) / 150.0, 0, 1)
-
-    def band(y0, y1, x0, x1, name, pad=4):
-        reg = alpha_full[y0:y1, x0:x1]
-        ys, xs = np.where(reg > 0.35)
-        bx0, bx1 = max(0, xs.min() - pad), xs.max() + pad + 1
-        by0, by1 = max(0, ys.min() - pad), ys.max() + pad + 1
-        crop = reg[by0:by1, bx0:bx1]
-        # two colourings, so the site can show the lettering in ink over light chapters and in
-        # white over dark ones with plain <img> elements (no CSS masks, nothing to resolve)
-        for tone, rgb in (("ink", (10, 10, 11)), ("white", (255, 255, 255))):
-            out = np.zeros((crop.shape[0], crop.shape[1], 4), np.uint8)
-            out[:, :, 0], out[:, :, 1], out[:, :, 2] = rgb
-            out[:, :, 3] = (crop * 255).astype(np.uint8)
-            path = os.path.join(d, f"{name}-{tone}.png")
-            Image.fromarray(out, "RGBA").save(path, optimize=True)
-            print(f"  {os.path.relpath(path, ROOT)}  {crop.shape[1]}x{crop.shape[0]}")
-        for stale in (os.path.join(d, f"{name}.png"),):
-            if os.path.exists(stale):
-                os.remove(stale)
-
-    band(560, 690, 505, 1120, "word-aivinci")
-    band(700, 740, 530, 1120, "word-studios")
-
-
+# ---------------------------------------------------------------- webp companions
+# The large alpha cutouts (the hand/phone layers, the audience) get a WebP sibling at ~1/4 the
+# weight; the site serves it through <picture> with the PNG as the fallback.
 # ---------------------------------------------------------------- founder frame
 # The wide founder frame supplied by Aivinci ("person image.PNG", 1672 x 941): a desktop
 # rendition at the reference frame size and a lighter phone rendition, JPEG + WebP each. The
@@ -774,48 +783,6 @@ def build_founder():
         print(f"  {os.path.relpath(jpg, ROOT)}  {r.width}x{r.height}  {os.path.getsize(jpg)//1024} KB / webp {os.path.getsize(jpg[:-4] + '.webp')//1024} KB")
 
 
-# ---------------------------------------------------------------- logo lettering
-# The studio's logo artwork ("Logo lockup 2026.webp"): the "Aivinci" lettering and the CREATIVE
-# STUDIOS line are lifted as alpha masks so the site can colour them (ink on paper, white over
-# dark chapters). The metallic mark keeps using the three pieces from the HD production asset.
-LOGO_LOCKUP = "Logo lockup 2026.webp"
-
-
-def build_lettering():
-    from PIL import Image
-    src = os.path.join(SRC, LOGO_LOCKUP)
-    if not os.path.exists(src):
-        raise SystemExit(f"missing {src}")
-    d = ensure("logo")
-    a = np.asarray(Image.open(src).convert("L")).astype(np.float32)
-    alpha_full = np.clip((222 - a) / 150.0, 0, 1)
-
-    def band(y0, y1, x0, x1, name, pad=4):
-        reg = alpha_full[y0:y1, x0:x1]
-        ys, xs = np.where(reg > 0.35)
-        bx0, bx1 = max(0, xs.min() - pad), xs.max() + pad + 1
-        by0, by1 = max(0, ys.min() - pad), ys.max() + pad + 1
-        crop = reg[by0:by1, bx0:bx1]
-        # two colourings, so the site can show the lettering in ink over light chapters and in
-        # white over dark ones with plain <img> elements (no CSS masks, nothing to resolve)
-        for tone, rgb in (("ink", (10, 10, 11)), ("white", (255, 255, 255))):
-            out = np.zeros((crop.shape[0], crop.shape[1], 4), np.uint8)
-            out[:, :, 0], out[:, :, 1], out[:, :, 2] = rgb
-            out[:, :, 3] = (crop * 255).astype(np.uint8)
-            path = os.path.join(d, f"{name}-{tone}.png")
-            Image.fromarray(out, "RGBA").save(path, optimize=True)
-            print(f"  {os.path.relpath(path, ROOT)}  {crop.shape[1]}x{crop.shape[0]}")
-        for stale in (os.path.join(d, f"{name}.png"),):
-            if os.path.exists(stale):
-                os.remove(stale)
-
-    band(560, 690, 505, 1120, "word-aivinci")
-    band(700, 740, 530, 1120, "word-studios")
-
-
-# ---------------------------------------------------------------- webp companions
-# The large alpha cutouts (the hand/phone layers, the audience) get a WebP sibling at ~1/4 the
-# weight; the site serves it through <picture> with the PNG as the fallback.
 WEBP = [
     ("products", "phone.png"), ("products", "hand.png"), ("products", "fingers.png"),
     ("contact", "foreground.png"),
@@ -839,7 +806,7 @@ STEPS = {
     "logo": build_logo, "hero": build_hero, "services": build_services, "approach": build_approach,
     "work": build_work, "products": build_products, "system": build_system, "contact": build_contact,
     "video": build_video, "webp": build_webp, "clients": build_clients, "lens": build_lens_mask,
-    "founder": build_founder, "lettering": build_lettering,
+    "founder": build_founder,
 }
 
 if __name__ == "__main__":
